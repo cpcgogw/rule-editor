@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ToolBar?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="sample.Controller">
+   <children>
+      <Pane minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #EFE;" />
+      <ToolBar prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="1">
+        <items>
+          <Button id="node_button" fx:id="node_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="500.0" text="Node" />
+            <Button id="edge_button" fx:id="edge_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="500.0" text="Edge" />
+        </items>
+      </ToolBar>
+   </children>
+   <rowConstraints>
+      <RowConstraints />
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>

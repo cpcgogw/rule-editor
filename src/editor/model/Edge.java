@@ -1,62 +1,61 @@
 package editor.model;
 
 
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
 /**
  * Created by vilddjur on 1/24/17.
  */
 public class Edge extends Line{
-    private Circle startCircle;
-    private Circle endCircle;
+    private Node startNode;
+    private Node endNode;
 
     /**
-     * Takes a start circle and an end circle, draws a line between the center of the two.
-     * @param startCircle
-     * @param endCircle
+     * Takes a start Node and an end Node, draws a line between the center of the two.
+     * @param startNode
+     * @param endNode
      * @throws Exception
      */
-    public Edge (Circle startCircle, Circle endCircle) throws Exception {
-        this.setStartCircle(startCircle);
-        if(endCircle != null){
-            this.setEndCircle(endCircle);
+    public Edge (Node startNode, Node endNode) throws Exception {
+        this.setStartNode(startNode);
+        if(endNode != null){
+            this.setEndNode(endNode);
         }
     }
 
     /**
-     * Sets the startCircle to the given circle, throws nullpointer exception when given circle is null
-     * @param startCircle
+     * Sets the startNode to the given Node, throws nullpointer exception when given Node is null
+     * @param startNode
      * @throws Exception
      */
-    public void setStartCircle(Circle startCircle) throws Exception {
-        if(startCircle == null){
-            throw new NullPointerException("Edge: start Circle cannot be null");
+    public void setStartNode(Node startNode) throws Exception {
+        if(startNode == null){
+            throw new NullPointerException("Edge: start Node cannot be null");
         }
-        this.setStartX(startCircle.getCenterX());
-        this.setStartY(startCircle.getCenterY());
-        this.startCircle = startCircle;
+        this.setStartX(startNode.getCenterX());
+        this.setStartY(startNode.getCenterY());
+        this.startNode = startNode;
     }
 
-    public Circle getStartCircle() {
-        return startCircle;
+    public Node getStartNode() {
+        return startNode;
     }
 
     /**
-     * Sets the endCircle to the given circle, throws nullpointer exception when given circle is null
-     * @param endCircle
+     * Sets the endNode to the given Node, throws nullpointer exception when given Node is null
+     * @param endNode
      * @throws Exception
      */
-    public void setEndCircle(Circle endCircle) throws Exception {
-        if(endCircle == null){
-            throw new NullPointerException("Edge: end Circle cannot be null");
+    public void setEndNode(Node endNode) throws Exception {
+        if(endNode == null){
+            throw new NullPointerException("Edge: end Node cannot be null");
         }
-        this.setEndX(endCircle.getCenterX());
-        this.setEndY(endCircle.getCenterY());
-        this.endCircle = endCircle;
+        this.setEndX(endNode.getCenterX());
+        this.setEndY(endNode.getCenterY());
+        this.endNode = endNode;
     }
 
-    public Circle getEndCircle() {
-        return endCircle;
+    public Node getEndNode() {
+        return endNode;
     }
 }

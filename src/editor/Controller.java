@@ -1,5 +1,6 @@
 package editor;
 
+import editor.model.Edge;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -32,8 +33,13 @@ public class Controller {
         EDGE, NODE, DELETE
     }
     private tools activeTool;
+    /**
+     * Variable to keep track of edge we are placing
+     */
+    private Edge currentEdge;
     public void initialize(){
         activeTool = NODE;
+        currentEdge = null;
         node_button.setOnMouseClicked(mouseEvent -> activeTool = NODE);
         edge_button.setOnMouseClicked(mouseEvent -> activeTool = EDGE);
         delete_button.setOnMouseClicked(mouseEvent -> activeTool = DELETE);
@@ -49,11 +55,25 @@ public class Controller {
         }
     }
 
-    private void handlePressNode(MouseEvent event, Node c) {
+    private void handlePressNode(MouseEvent event, Circle c) {
         if(activeTool == DELETE){
             canvas.getChildren().remove(c);
         }else if(activeTool == EDGE){
-            // start or end edge
+            if(currentEdge == null){
+                try {
+                    currentEdge = new Edge(c, null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else{
+                try {
+                    currentEdge.setEndCircle(c);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                canvas.getChildren().add(currentEdge);
+                currentEdge = null;
+            }
         }
     }
 }

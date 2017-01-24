@@ -1,4 +1,4 @@
-package sample;
+package editor;
 
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -8,9 +8,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
-import static sample.Controller.tools.DELETE;
-import static sample.Controller.tools.EDGE;
-import static sample.Controller.tools.NODE;
+import static editor.Controller.tools.DELETE;
+import static editor.Controller.tools.EDGE;
+import static editor.Controller.tools.NODE;
 
 public class Controller {
     /**
@@ -46,15 +46,14 @@ public class Controller {
             Circle c = new Circle(event.getX(), event.getY(), 40, Color.BLUE);
             c.setOnMouseClicked(mouseEvent -> handlePressNode(mouseEvent, c));
             canvas.getChildren().add(c);
-        }else if(activeTool == EDGE){
-            
         }
-
     }
 
     private void handlePressNode(MouseEvent event, Node c) {
         if(activeTool == DELETE){
             canvas.getChildren().remove(c);
+        }else if(activeTool == EDGE){
+            // start or end edge
         }
     }
 }

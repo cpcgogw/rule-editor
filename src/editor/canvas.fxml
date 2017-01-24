@@ -7,13 +7,14 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="editor.controller.Controller">
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="editor.controller.Controller">
    <children>
       <Pane fx:id="canvas" minHeight="800.0" minWidth="1200.0" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #EFE;" />
       <ToolBar prefHeight="40.0" prefWidth="200.0" GridPane.rowIndex="1">
         <items>
-          <Button id="node_button" fx:id="node_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="500.0" text="Node" />
-            <Button id="edge_button" fx:id="edge_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="500.0" text="Edge" />
+          <Button id="node_button" fx:id="node_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="342.0" text="Node" />
+            <Button id="edge_button" fx:id="edge_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="330.0" text="Edge" />
+            <Button fx:id="move_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="313.0" text="Move" />
             <Button fx:id="delete_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="173.0" text="Delete" />
         </items>
       </ToolBar>

@@ -8,6 +8,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 
+import java.util.ArrayList;
+
 import static editor.controller.Controller.tools.*;
 
 /**
@@ -20,6 +22,8 @@ public class NodeController {
     private Controller controller;
     private EdgeController edgeController;
     private boolean dragging;
+    private ArrayList<Node> nodes;
+
     /**
      * TODO: fix Node dependency, we dont want controller here, only using it to keep track of active tool.
      * @param controller
@@ -31,6 +35,7 @@ public class NodeController {
         this.controller = controller;
         this.canvas = canvas;
         this.edgeController = new EdgeController(canvas);
+        this.nodes = new ArrayList<Node>();
     }
 
     private void handlePressNode(MouseEvent event, Node c) {
@@ -62,6 +67,7 @@ public class NodeController {
                 c.updateEdges();
             }
         });
+        nodes.add(c);
         return c;
     }
 }

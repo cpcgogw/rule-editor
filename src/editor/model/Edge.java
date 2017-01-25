@@ -1,12 +1,17 @@
 package editor.model;
 
 
-import javafx.scene.shape.Line;
+import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
+import javafx.scene.shape.QuadCurve;
+
+import java.awt.*;
 
 /**
  * Created by vilddjur on 1/24/17.
  */
-public class Edge extends Line{
+public class Edge extends QuadCurve{
     private Node startNode;
     private Node endNode;
 
@@ -14,27 +19,25 @@ public class Edge extends Line{
      * Takes a start Node and an end Node, draws a line between the center of the two.
      * @param startNode
      * @param endNode
-     * @throws Exception
      */
-    public Edge (Node startNode, Node endNode) throws Exception {
+    public Edge (Node startNode, Node endNode) {
         this.setStartNode(startNode);
         if(endNode != null){
             this.setEndNode(endNode);
         }
+        this.setFill(new Color(0,0,0,0));
+        this.setStroke(Color.BLACK);
     }
 
     /**
-     * Sets the startNode to the given Node, throws nullpointer exception when given Node is null
+     * Sets the startNode to the given Node
      * @param startNode
-     * @throws Exception
      */
-    public void setStartNode(Node startNode) throws Exception {
-        if(startNode == null){
-            throw new NullPointerException("Edge: start Node cannot be null");
-        }
+    public void setStartNode(Node startNode) {
         this.setStartX(startNode.getCenterX());
         this.setStartY(startNode.getCenterY());
         this.startNode = startNode;
+        startNode.addEdge(this);
     }
 
     public Node getStartNode() {
@@ -42,20 +45,35 @@ public class Edge extends Line{
     }
 
     /**
-     * Sets the endNode to the given Node, throws nullpointer exception when given Node is null
+     * Sets the endNode to the given Node
      * @param endNode
-     * @throws Exception
      */
-    public void setEndNode(Node endNode) throws Exception {
-        if(endNode == null){
-            throw new NullPointerException("Edge: end Node cannot be null");
-        }
+    public void setEndNode(Node endNode) {
         this.setEndX(endNode.getCenterX());
         this.setEndY(endNode.getCenterY());
         this.endNode = endNode;
+        this.endNode.addEdge(this);
+        setBend();
+    }
+
+    private void setBend() {
+        this.setControlX((Math.abs(getEndX()-getStartX())));
+        this.setControlY((Math.abs(getEndY()-getStartY())));
     }
 
     public Node getEndNode() {
         return endNode;
+    }
+
+    public void updateNodes() {
+        if(startNode != null){
+            this.setStartX(startNode.getCenterX());
+            this.setStartY(startNode.getCenterY());
+        }
+        if(endNode != null) {
+            this.setEndX(endNode.getCenterX());
+            this.setEndY(endNode.getCenterY());
+        }
+        setBend();
     }
 }

@@ -17,6 +17,7 @@ public class NodeController {
     private final Pane canvas;
     private Edge currentEdge;
     private Controller controller;
+    private EdgeController edgeController;
     private boolean dragging;
     /**
      * TODO: fix Node dependency, we dont want controller here, only using it to keep track of active tool.
@@ -28,24 +29,18 @@ public class NodeController {
         dragging = false;
         this.controller = controller;
         this.canvas = canvas;
+        this.edgeController = new EdgeController(canvas);
     }
 
     private void handlePressNode(MouseEvent event, Node c) {
         if(controller.getActiveTool() == DELETE){
             canvas.getChildren().remove(c);
+            canvas.getChildren().removeAll(c.getEdges());
         }else if(controller.getActiveTool() == EDGE){
             if(currentEdge == null){
-                try {
-                    currentEdge = new Edge(c, null);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                currentEdge = edgeController.addEdge(c, null);
             }else{
-                try {
-                    currentEdge.setEndNode(c);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                currentEdge.setEndNode(c);
                 canvas.getChildren().add(currentEdge);
                 currentEdge = null;
             }
@@ -59,11 +54,11 @@ public class NodeController {
         c.setOnMousePressed(mouseEvent -> handlePressNode(mouseEvent, c));
         c.setOnMouseReleased(event -> {
             dragging = false;
-            // reload all edges
         });
         c.setOnMouseDragged(event -> {
             if(dragging){
                 c.setPos(event.getX(),event.getY());
+                c.updateEdges();
             }
         });
         return c;

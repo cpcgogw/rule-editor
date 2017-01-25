@@ -10,10 +10,39 @@ import java.util.ArrayList;
  */
 public class Node extends Circle {
     private ArrayList<Edge> edges;
+    private int id;
+    private static int idCounter=0;
+    public enum NodeType{
+        START, END, LOCK, KEY, ROOM
+    }
+    public NodeType type;
 
-    public Node(double x, double y, int radius, Color color){
+    public Node(double x, double y, int radius, Color color, NodeType type){
         super(x, y, radius, color);
         edges = new ArrayList<Edge>();
+        id = idCounter++;
+        this.type = type;
+        setColor();
+    }
+
+    private void setColor() {
+        switch (type){
+            case END:
+                this.setFill(Color.FORESTGREEN);
+                break;
+            case KEY:
+                this.setFill(Color.ORANGE);
+                break;
+            case LOCK:
+                this.setFill(Color.RED);
+                break;
+            case ROOM:
+                this.setFill(Color.PINK);
+                break;
+            case START:
+                this.setFill(Color.DEEPSKYBLUE);
+                break;
+        }
     }
 
     public void setPos(double x, double y) {

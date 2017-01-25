@@ -11,6 +11,7 @@ public class Edge extends QuadCurve{
     private Node startNode;
     private Node endNode;
     private Path arrowHead;
+    public static final double STROKE_WIDTH = 3;
     /**
      * Takes a start Node and an end Node, draws a line between the center of the two.
      * @param startNode
@@ -23,7 +24,9 @@ public class Edge extends QuadCurve{
         }
         this.setFill(new Color(0,0,0,0));
         this.setStroke(Color.BLACK);
+        this.setStrokeWidth(STROKE_WIDTH);
         arrowHead = new Path();
+        this.arrowHead.setStrokeWidth(STROKE_WIDTH);
     }
 
     /**

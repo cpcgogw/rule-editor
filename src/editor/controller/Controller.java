@@ -5,9 +5,11 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import static editor.controller.Controller.tools.*;
+import editor.model.Node.NodeType;
 
 public class Controller {
     /**
@@ -23,10 +25,33 @@ public class Controller {
     private Button move_button;
 
     @FXML
+    private VBox node_types_box;
+
+    @FXML
+    private Button start_node_button;
+
+    @FXML
+    private Button end_node_button;
+
+    @FXML
+    private Button key_node_button;
+
+    @FXML
+    private Button lock_node_button;
+
+    @FXML
+    private Button room_node_button;
+
+    @FXML
     private Pane canvas;
+
 
     public tools getActiveTool() {
         return activeTool;
+    }
+
+    public NodeType getActiveType(){
+        return activeType;
     }
 
     /**
@@ -36,14 +61,27 @@ public class Controller {
         EDGE, NODE, DELETE, MOVE
     }
     private tools activeTool;
+    private NodeType activeType;
 
     private NodeController nodeController;
     public void initialize(){
+        activeType = NodeType.START;
         activeTool = NODE;
-        node_button.setOnMouseClicked(mouseEvent -> activeTool = NODE);
+        node_button.setOnMouseClicked(mouseEvent -> {
+            activeTool = NODE;
+            node_types_box.setVisible(true);
+        });
         edge_button.setOnMouseClicked(mouseEvent -> activeTool = EDGE);
         delete_button.setOnMouseClicked(mouseEvent -> activeTool = DELETE);
         move_button.setOnMouseClicked(mouseEvent -> activeTool = MOVE);
+
+        start_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.START);
+        end_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.END);
+        key_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.KEY);
+        lock_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.LOCK);
+        room_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.ROOM);
+
+
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent));
 
         nodeController = new NodeController(this, canvas);

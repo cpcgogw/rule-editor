@@ -51,7 +51,7 @@ public class NodeController {
     }
 
     public Node addNode(double x, double y, int radius, Color color) {
-        Node c = new Node(x,y,radius,color);
+        Node c = new Node(x,y,radius,color, controller.getActiveType());
         c.setOnMousePressed(mouseEvent -> handlePressNode(mouseEvent, c));
         c.setOnMouseReleased(event -> {
             dragging = false;

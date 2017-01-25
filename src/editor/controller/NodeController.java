@@ -22,7 +22,7 @@ public class NodeController {
     private Controller controller;
     private EdgeController edgeController;
     private boolean dragging;
-    private ArrayList<Node> nodes;
+    private static ArrayList<Node> nodes;
 
     /**
      * TODO: fix Node dependency, we dont want controller here, only using it to keep track of active tool.
@@ -71,7 +71,7 @@ public class NodeController {
         return c;
     }
 
-    public ArrayList<Node> GetNodes(){
+    public static ArrayList<Node> getNodes(){
         return nodes;
     }
 }

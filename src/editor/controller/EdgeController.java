@@ -30,6 +30,7 @@ public class EdgeController {
                 if(dragging){
                     e.setControlX(event.getX());
                     e.setControlY(event.getY());
+                    e.makeArrow();
                 }
         });
 

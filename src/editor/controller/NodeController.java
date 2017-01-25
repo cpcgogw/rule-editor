@@ -6,6 +6,7 @@ import editor.model.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
 
 import static editor.controller.Controller.tools.*;
 
@@ -40,7 +41,7 @@ public class NodeController {
             if(currentEdge == null){
                 currentEdge = edgeController.addEdge(c, null);
             }else{
-                currentEdge.setEndNode(c);
+                canvas.getChildren().add(currentEdge.setEndNode(c));
                 canvas.getChildren().add(currentEdge);
                 currentEdge = null;
             }

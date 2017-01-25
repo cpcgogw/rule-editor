@@ -1,12 +1,8 @@
 package editor.model;
 
 
-import javafx.scene.paint.*;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.QuadCurve;
-
-import java.awt.*;
+import javafx.scene.shape.*;
 
 /**
  * Created by vilddjur on 1/24/17.
@@ -14,7 +10,7 @@ import java.awt.*;
 public class Edge extends QuadCurve{
     private Node startNode;
     private Node endNode;
-
+    private Path arrowHead;
     /**
      * Takes a start Node and an end Node, draws a line between the center of the two.
      * @param startNode
@@ -27,6 +23,7 @@ public class Edge extends QuadCurve{
         }
         this.setFill(new Color(0,0,0,0));
         this.setStroke(Color.BLACK);
+        arrowHead = new Path();
     }
 
     /**
@@ -48,12 +45,28 @@ public class Edge extends QuadCurve{
      * Sets the endNode to the given Node
      * @param endNode
      */
-    public void setEndNode(Node endNode) {
+    public Shape setEndNode(Node endNode) {
         this.setEndX(endNode.getCenterX());
         this.setEndY(endNode.getCenterY());
         this.endNode = endNode;
         this.endNode.addEdge(this);
+
         setBend();
+        return makeArrow();
+    }
+
+    public Shape makeArrow() {
+        double deltaY = (getControlY() - endNode.getCenterY());
+        double deltaX = (getControlX() - endNode.getCenterX());
+        double angle = Math.atan2(deltaY,deltaX);
+        double x = endNode.getCenterX() + Math.cos(angle)*40;
+        double y = endNode.getCenterY() + Math.sin(angle)*40;
+        arrowHead.getElements().clear();
+        arrowHead.getElements().add(new MoveTo(x, y));
+        arrowHead.getElements().add(new LineTo(x + Math.cos(angle+Math.toRadians(45))*20,y + Math.sin(angle+Math.toRadians(45))*20));
+        arrowHead.getElements().add(new LineTo(x + Math.cos(angle+Math.toRadians(-45))*20,y + Math.sin(angle+Math.toRadians(-45))*20));
+        arrowHead.getElements().add(new LineTo(x,y));
+        return arrowHead;
     }
 
     private void setBend() {
@@ -75,5 +88,6 @@ public class Edge extends QuadCurve{
             this.setEndY(endNode.getCenterY());
         }
         setBend();
+        makeArrow();
     }
 }

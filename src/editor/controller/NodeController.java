@@ -70,4 +70,8 @@ public class NodeController {
         nodes.add(c);
         return c;
     }
+
+    public ArrayList<Node> GetNodes(){
+        return nodes;
+    }
 }

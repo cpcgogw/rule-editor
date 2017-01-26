@@ -1,5 +1,6 @@
 package editor.controller;
 
+import editor.FileHandler;
 import editor.model.Edge;
 import javafx.fxml.FXML;
 import editor.model.Node;
@@ -13,6 +14,8 @@ import static editor.controller.Controller.tools.*;
 import static editor.model.Node.DEFAULT_RADIUS;
 
 import editor.model.Node.NodeType;
+
+import javax.swing.*;
 
 public class Controller {
     /**
@@ -48,6 +51,11 @@ public class Controller {
     @FXML
     private Pane canvas;
 
+    @FXML
+    private Button save_button;
+
+    @FXML
+    private Button load_button;
 
     public tools getActiveTool() {
         return activeTool;
@@ -84,10 +92,16 @@ public class Controller {
         lock_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.LOCK);
         room_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.ROOM);
 
+        save_button.setOnMouseClicked(mouseEvent -> PrepareSave());
 
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent));
 
         nodeController = new NodeController(this, canvas);
+    }
+
+    private void PrepareSave() {
+        String path = JOptionPane.showInputDialog("Save","What is the name of the savefile?");
+        FileHandler.SaveNodes(NodeController.getNodes(),path);
     }
 
     private void handlePress(MouseEvent event) {

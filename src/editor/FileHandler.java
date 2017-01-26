@@ -1,8 +1,7 @@
 package editor;
 
-import editor.controller.NodeController;
 import editor.model.*;
-import javafx.scene.paint.*;
+import javafx.scene.paint.Color;
 import org.w3c.dom.*;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -12,24 +11,22 @@ import javax.xml.transform.OutputKeys;
 import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import javax.swing.*;
 
 /**
- * Created by alija on 2017-01-25.
+ * This is to save and/or store nodes & edges
+ *
+ *
  */
 
 public class FileHandler {
 
-    public static void SaveNodes(ArrayList<editor.model.Node> nodes) {
+    public static void SaveNodes(ArrayList<editor.model.Node> nodes, String path) {
 
         try {
 
@@ -59,6 +56,14 @@ public class FileHandler {
                 elemTag.appendChild(doc.createTextNode(String.valueOf(node.getType())));
                 elemNode.appendChild(elemTag);
 
+                Element elemX = doc.createElement("X");
+                elemX.appendChild(doc.createTextNode(String.valueOf(node.getCenterX())));
+                elemNode.appendChild(elemId);
+
+                Element elemY = doc.createElement("Y");
+                elemY.appendChild(doc.createTextNode(String.valueOf(node.getCenterY())));
+                elemNode.appendChild(elemId);
+
                 Element elemEdges = doc.createElement("Edges");
                 elemNode.appendChild(elemEdges);
                 for (Edge edge : node.getEdges()) {
@@ -86,18 +91,11 @@ public class FileHandler {
             DOMSource source = new DOMSource(doc);
             try {
                 // location and name of XML file you can change as per need
-                FileWriter fos = new FileWriter(((String)JOptionPane.showInputDialog(new
-
-                        JFrame("Save name"), "What's the save name?"))+
-                ".xml");
+                FileWriter fos = new FileWriter(path);
                 StreamResult result = new StreamResult(fos);
                 transformer.transform(source, result);
 
-            } catch (IOException e) {
-
-                e.printStackTrace();
-            }
-            catch (Exception e){
+            } catch (Exception e){
                 e.printStackTrace();
             }
 
@@ -132,10 +130,11 @@ public class FileHandler {
 
                     //Extract elements of node
                     int id = Integer.parseInt(element.getElementsByTagName("ID").item(0).getTextContent());
-                    String Type = element.getElementsByTagName("Tag").item(0).getTextContent();
-
+                    editor.model.Node.NodeType type = editor.model.Node.NodeType.valueOf(element.getElementsByTagName("Tag").item(0).getTextContent());
+                    double x = Double.parseDouble(element.getElementsByTagName("X").item(0).getTextContent());
+                    double y = Double.parseDouble(element.getElementsByTagName("Y").item(0).getTextContent());
                     //Store the extracted Node
-                    editor.model.Node node = new editor.model.Node(editor.model.Node.NodeType.valueOf(Type),id);
+                    editor.model.Node node = new editor.model.Node(id,x,y,5, Color.RED,type);
                     NodeMap.put(id,node);
                 }
 
@@ -159,7 +158,8 @@ public class FileHandler {
                         //Store the extracted Edge
                         editor.model.Node startNode = NodeMap.get(startID);
                         editor.model.Node endNode = NodeMap.get(endID);
-                        editor.model.Edge edge = new editor.model.Edge(startNode, endNode);
+
+                        new editor.model.Edge(startNode, endNode);
 
                         edgeMap.put(startID,endID);
                     }
@@ -168,10 +168,13 @@ public class FileHandler {
 
 
         } catch (ParserConfigurationException e) {
+            System.out.println("ParserConfigurationException: ");
             e.printStackTrace();
         } catch (SAXException e) {
+            System.out.println("SAXException: ");
             e.printStackTrace();
         } catch (IOException e) {
+            System.out.println("IOException: ");
             e.printStackTrace();
         }
 

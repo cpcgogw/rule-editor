@@ -12,10 +12,11 @@ public class Node extends Circle {
     private ArrayList<Edge> edges;
     private int id;
     private static int idCounter=0;
+
     public enum NodeType{
         START, END, LOCK, KEY, ROOM
     }
-    public NodeType type;
+    private NodeType type;
 
     public Node(double x, double y, int radius, Color color, NodeType type){
         super(x, y, radius, color);
@@ -69,5 +70,12 @@ public class Node extends Circle {
 
     public void addEdge(Edge e){
         edges.add(e);
+    }
+
+    public int getID() {
+        return id;
+    }
+    public NodeType getType(){
+        return type;
     }
 }

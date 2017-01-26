@@ -1,7 +1,8 @@
 package editor.controller;
 
+import editor.model.Edge;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
+import editor.model.Node;
 import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
@@ -9,6 +10,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import static editor.controller.Controller.tools.*;
+import static editor.model.Node.DEFAULT_RADIUS;
+
 import editor.model.Node.NodeType;
 
 public class Controller {
@@ -89,7 +92,7 @@ public class Controller {
 
     private void handlePress(MouseEvent event) {
         if(activeTool == NODE){
-            Node node = nodeController.addNode(event.getX(), event.getY(), 40, Color.BLUE);
+            Node node = nodeController.addNode(event.getX(), event.getY(), DEFAULT_RADIUS, Color.BLUE);
 
             canvas.getChildren().add(node);
         }

@@ -4,6 +4,8 @@ package editor.model;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.*;
 
+import static editor.model.Node.DEFAULT_RADIUS;
+
 /**
  * Created by vilddjur on 1/24/17.
  */
@@ -59,16 +61,15 @@ public class Edge extends QuadCurve{
     }
 
     public Shape makeArrow() {
-        arrowHead = new Path();
         double deltaY = (getControlY() - endNode.getCenterY());
         double deltaX = (getControlX() - endNode.getCenterX());
         double angle = Math.atan2(deltaY,deltaX);
-        double x = endNode.getCenterX() + Math.cos(angle)*40;
-        double y = endNode.getCenterY() + Math.sin(angle)*40;
+        double x = endNode.getCenterX() + Math.cos(angle)*DEFAULT_RADIUS;
+        double y = endNode.getCenterY() + Math.sin(angle)*DEFAULT_RADIUS;
         arrowHead.getElements().clear();
         arrowHead.getElements().add(new MoveTo(x, y));
-        arrowHead.getElements().add(new LineTo(x + Math.cos(angle+Math.toRadians(45))*20,y + Math.sin(angle+Math.toRadians(45))*20));
-        arrowHead.getElements().add(new LineTo(x + Math.cos(angle+Math.toRadians(-45))*20,y + Math.sin(angle+Math.toRadians(-45))*20));
+        arrowHead.getElements().add(new LineTo(x + Math.cos(angle+Math.toRadians(45))*(DEFAULT_RADIUS/2),y + Math.sin(angle+Math.toRadians(45))*(DEFAULT_RADIUS/2)));
+        arrowHead.getElements().add(new LineTo(x + Math.cos(angle+Math.toRadians(-45))*(DEFAULT_RADIUS/2),y + Math.sin(angle+Math.toRadians(-45))*(DEFAULT_RADIUS/2)));
         arrowHead.getElements().add(new LineTo(x,y));
         return arrowHead;
     }

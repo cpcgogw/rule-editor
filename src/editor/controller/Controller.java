@@ -101,7 +101,7 @@ public class Controller {
 
     private void PrepareSave() {
         String path = JOptionPane.showInputDialog("Save","What is the name of the savefile?");
-        FileHandler.SaveNodes(NodeController.getNodes(),path);
+        FileHandler.SaveNodes(NodeController.getNodes(),"saves/"+path);
     }
 
     private void handlePress(MouseEvent event) {

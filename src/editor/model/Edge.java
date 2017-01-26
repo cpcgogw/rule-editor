@@ -96,4 +96,7 @@ public class Edge extends QuadCurve{
         setBend();
         makeArrow();
     }
+    public Shape getArrow(){
+        return arrowHead;
+    }
 }

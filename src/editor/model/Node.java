@@ -24,6 +24,13 @@ public class Node extends Circle {
         this.type = type;
         setColor();
     }
+    public Node(int id, double x, double y, int radius, Color color, NodeType type){
+        this(x, y, radius, color, type);
+        this.id = id;
+        if(id>=idCounter){
+            idCounter = id+1;
+        }
+    }
 
     private void setColor() {
         switch (type){

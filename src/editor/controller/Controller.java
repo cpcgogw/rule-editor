@@ -14,8 +14,10 @@ import static editor.controller.Controller.tools.*;
 import static editor.model.Node.DEFAULT_RADIUS;
 
 import editor.model.Node.NodeType;
+import javafx.util.Pair;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class Controller {
     /**
@@ -93,15 +95,30 @@ public class Controller {
         room_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.ROOM);
 
         save_button.setOnMouseClicked(mouseEvent -> PrepareSave());
+        load_button.setOnMouseClicked(mouseEvent -> PrepareLoad());
 
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent));
 
         nodeController = new NodeController(this, canvas);
     }
 
+    private void PrepareLoad() {
+        String path = JOptionPane.showInputDialog("Load","What is the name of the savefile?");
+        Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes(path);
+        for(Node node : pair.getKey()){
+            Node c = nodeController.addNode(node);
+            canvas.getChildren().add(c);
+        }
+        for(Edge e : pair.getValue()){
+            Edge c = nodeController.getEdgeController().addEdge(e);
+            canvas.getChildren().add(c.getArrow());
+            canvas.getChildren().add(c);
+        }
+    }
+
     private void PrepareSave() {
         String path = JOptionPane.showInputDialog("Save","What is the name of the savefile?");
-        FileHandler.SaveNodes(NodeController.getNodes(),path);
+        FileHandler.SaveNodes(nodeController.getNodes(),path);
     }
 
     private void handlePress(MouseEvent event) {

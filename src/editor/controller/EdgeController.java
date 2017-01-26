@@ -36,5 +36,20 @@ public class EdgeController {
 
         return e;
     }
+    public Edge addEdge(Edge e) {
+        e.setOnMousePressed(mouseEvent -> dragging = true);
+        e.setOnMouseReleased(event -> {
+            dragging = false;
+        });
 
+        e.setOnMouseDragged(event -> {
+            if(dragging){
+                e.setControlX(event.getX());
+                e.setControlY(event.getY());
+                e.makeArrow();
+            }
+        });
+
+        return e;
+    }
 }

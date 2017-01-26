@@ -59,11 +59,11 @@ public class FileHandler {
 
                 Element elemX = doc.createElement("X");
                 elemX.appendChild(doc.createTextNode(String.valueOf(node.getCenterX())));
-                elemNode.appendChild(elemId);
+                elemNode.appendChild(elemX);
 
                 Element elemY = doc.createElement("Y");
                 elemY.appendChild(doc.createTextNode(String.valueOf(node.getCenterY())));
-                elemNode.appendChild(elemId);
+                elemNode.appendChild(elemY);
 
                 Element elemEdges = doc.createElement("Edges");
                 elemNode.appendChild(elemEdges);
@@ -136,7 +136,8 @@ public class FileHandler {
                     double x = Double.parseDouble(element.getElementsByTagName("X").item(0).getTextContent());
                     double y = Double.parseDouble(element.getElementsByTagName("Y").item(0).getTextContent());
                     //Store the extracted Node
-                    editor.model.Node node = new editor.model.Node(id,x,y,5, Color.RED,type);
+
+                    editor.model.Node node = new editor.model.Node(id,x,y, editor.model.Node.DEFAULT_RADIUS, Color.RED,type);
                     NodeMap.put(id,node);
                 }
 
@@ -146,7 +147,7 @@ public class FileHandler {
 
 
             //Defines all edges...
-            HashMap<Integer,Integer> edgeMap = new HashMap<>(); //HashMap used for easy fix of duplicate edges.
+            HashMap<Integer,ArrayList<Integer>> edgeMap = new HashMap<>(); //HashMap used for easy fix of duplicate edges.
             xnodeList = doc.getElementsByTagName("Edge");//grab all "Edge" from XML-file
             for(int i = 0; i < xnodeList.getLength(); i++){
                 Node xNode = xnodeList.item(i);
@@ -157,15 +158,17 @@ public class FileHandler {
                     //Extract elements of node
                     int startID = Integer.parseInt(element.getElementsByTagName("StartID").item(0).getTextContent());
                     int endID =  Integer.parseInt(element.getElementsByTagName("EndID").item(0).getTextContent());
-
                     if(edgeMap.get(startID)==null) {
+                        edgeMap.put(startID, new ArrayList<Integer>());
+                    }
+                    if (!edgeMap.get(startID).contains(endID)) {
                         //Store the extracted Edge
                         editor.model.Node startNode = NodeMap.get(startID);
                         editor.model.Node endNode = NodeMap.get(endID);
 
                         edges.add(new editor.model.Edge(startNode, endNode));
 
-                        edgeMap.put(startID,endID);
+                        edgeMap.get(startID).add(endID);
                     }
                 }
             }

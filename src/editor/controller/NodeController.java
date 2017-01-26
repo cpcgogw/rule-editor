@@ -22,7 +22,7 @@ public class NodeController {
     private Controller controller;
     private EdgeController edgeController;
     private boolean dragging;
-    private static ArrayList<Node> nodes;
+    private ArrayList<Node> nodes;
 
     /**
      * TODO: fix Node dependency, we dont want controller here, only using it to keep track of active tool.
@@ -54,7 +54,20 @@ public class NodeController {
             dragging = true;
         }
     }
-
+    public Node addNode(Node c) {
+        c.setOnMousePressed(mouseEvent -> handlePressNode(mouseEvent, c));
+        c.setOnMouseReleased(event -> {
+            dragging = false;
+        });
+        c.setOnMouseDragged(event -> {
+            if(dragging){
+                c.setPos(event.getX(),event.getY());
+                c.updateEdges();
+            }
+        });
+        nodes.add(c);
+        return c;
+    }
     public Node addNode(double x, double y, int radius, Color color) {
         Node c = new Node(x,y,radius,color, controller.getActiveType());
         c.setOnMousePressed(mouseEvent -> handlePressNode(mouseEvent, c));
@@ -71,7 +84,11 @@ public class NodeController {
         return c;
     }
 
-    public static ArrayList<Node> getNodes(){
+    public  ArrayList<Node> getNodes(){
         return nodes;
+    }
+
+    public  EdgeController getEdgeController(){
+        return edgeController;
     }
 }

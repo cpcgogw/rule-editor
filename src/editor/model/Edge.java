@@ -59,6 +59,7 @@ public class Edge extends QuadCurve{
     }
 
     public Shape makeArrow() {
+        arrowHead = new Path();
         double deltaY = (getControlY() - endNode.getCenterY());
         double deltaX = (getControlX() - endNode.getCenterX());
         double angle = Math.atan2(deltaY,deltaX);

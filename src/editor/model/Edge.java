@@ -20,6 +20,8 @@ public class Edge extends QuadCurve{
      * @param endNode
      */
     public Edge (Node startNode, Node endNode) {
+        arrowHead = new Path();
+        this.arrowHead.setStrokeWidth(STROKE_WIDTH);
         this.setStartNode(startNode);
         if(endNode != null){
             this.setEndNode(endNode);
@@ -27,8 +29,7 @@ public class Edge extends QuadCurve{
         this.setFill(new Color(0,0,0,0));
         this.setStroke(Color.BLACK);
         this.setStrokeWidth(STROKE_WIDTH);
-        arrowHead = new Path();
-        this.arrowHead.setStrokeWidth(STROKE_WIDTH);
+
     }
 
     /**

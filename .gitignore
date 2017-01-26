@@ -1,3 +1,6 @@
+# SELF DEFINED IGNORES
+saves/*
+
 
 # Created by https://www.gitignore.io/api/intellij,java,linux,windows
 

@@ -2,6 +2,7 @@ package editor;
 
 import editor.model.*;
 import javafx.scene.paint.Color;
+import javafx.util.Pair;
 import org.w3c.dom.*;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -106,8 +107,9 @@ public class FileHandler {
             System.out.println("Error building document");
         }
     }
-    public static ArrayList<editor.model.Node> LoadNodes(String path){
+    public static Pair<ArrayList<editor.model.Node>,ArrayList<Edge>> LoadNodes(String path){
         HashMap<Integer,editor.model.Node> NodeMap = new HashMap<>();
+        ArrayList<Edge> edges = new ArrayList<>();
 
         try {
 
@@ -141,6 +143,8 @@ public class FileHandler {
             }
 
 
+
+
             //Defines all edges...
             HashMap<Integer,Integer> edgeMap = new HashMap<>(); //HashMap used for easy fix of duplicate edges.
             xnodeList = doc.getElementsByTagName("Edge");//grab all "Edge" from XML-file
@@ -159,7 +163,7 @@ public class FileHandler {
                         editor.model.Node startNode = NodeMap.get(startID);
                         editor.model.Node endNode = NodeMap.get(endID);
 
-                        new editor.model.Edge(startNode, endNode);
+                        edges.add(new editor.model.Edge(startNode, endNode));
 
                         edgeMap.put(startID,endID);
                     }
@@ -179,7 +183,9 @@ public class FileHandler {
         }
 
         //Returns the entries as an ArrayList
-        return  new ArrayList<editor.model.Node>(NodeMap.values());
+        Pair pair = new Pair(new ArrayList<>(NodeMap.values()),edges);
+        return pair;
     }
 
 }
+

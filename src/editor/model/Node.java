@@ -14,6 +14,7 @@ public class Node extends Circle {
     private static int idCounter=0;
     public static final int DEFAULT_RADIUS = 40;
 
+
     public enum NodeType{
         START, END, LOCK, KEY, ROOM
     }
@@ -78,5 +79,9 @@ public class Node extends Circle {
     }
     public NodeType getType(){
         return type;
+    }
+
+    public void removeEdge(Edge edge) {
+        edges.remove(edge);
     }
 }

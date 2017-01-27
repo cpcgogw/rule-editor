@@ -61,10 +61,19 @@ public class Controller {
     private Pane canvas;
 
     @FXML
+    private Pane rule_canvas;
+
+    @FXML
     private MenuItem save_button;
 
     @FXML
     private MenuItem load_button;
+
+    @FXML
+    private MenuItem rule_menu_item;
+
+    @FXML
+    private MenuItem level_menu_item;
 
     public tools getActiveTool() {
         return activeTool;
@@ -80,14 +89,15 @@ public class Controller {
     public enum tools {
         EDGE, NODE, DELETE, MOVE
     }
-    private tools activeTool;
-    private NodeType activeType;
     private FileChooser fileChooser = new FileChooser();
+    public static tools activeTool;
+    public static NodeType activeType;
 
     private NodeController nodeController;
     public void initialize(){
         activeType = NodeType.START;
         activeTool = NODE;
+
         edge_button.setOnMouseClicked(mouseEvent -> activeTool = EDGE);
         delete_button.setOnMouseClicked(mouseEvent -> activeTool = DELETE);
         move_button.setOnMouseClicked(mouseEvent -> activeTool = MOVE);
@@ -100,10 +110,23 @@ public class Controller {
 
         save_button.setOnAction(actionEvent -> PrepareSave());
         load_button.setOnAction(actionEvent -> PrepareLoad());
+        rule_menu_item.setOnAction(actionEvent -> showRules());
+        level_menu_item.setOnAction(actionEvent -> showLevel());
 
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent));
 
-        nodeController = new NodeController(this, canvas);
+
+        nodeController = new NodeController(canvas);
+    }
+
+    private void showRules() {
+        canvas.setVisible(false);
+        rule_canvas.setVisible(true);
+    }
+
+    private void showLevel() {
+        canvas.setVisible(true);
+        rule_canvas.setVisible(false);
     }
 
     private void activateType(NodeType type) {

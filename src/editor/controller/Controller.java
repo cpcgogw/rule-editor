@@ -7,6 +7,7 @@ import editor.model.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -15,15 +16,22 @@ import static editor.controller.Controller.tools.*;
 import static editor.model.Node.DEFAULT_RADIUS;
 
 import editor.model.Node.NodeType;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 
 public class Controller {
     /**
      * Buttons for handling active tools
      */
+
+    @FXML
+    private AnchorPane window;
+
     @FXML
     private Button edge_button;
     @FXML
@@ -74,6 +82,7 @@ public class Controller {
     }
     private tools activeTool;
     private NodeType activeType;
+    private FileChooser fileChooser = new FileChooser();
 
     private NodeController nodeController;
     public void initialize(){
@@ -102,9 +111,22 @@ public class Controller {
         activeTool = NODE;
     }
 
+    /**
+     * Loads file and appends elements to canvas
+     */
     private void PrepareLoad() {
-        String path = JOptionPane.showInputDialog("Load","What is the name of the savefile?");
-        Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes("saves/"+path);
+        File file;
+        Stage stage;
+
+        fileChooser.setTitle("Explorer");
+        stage = (Stage) window.getScene().getWindow();
+        fileChooser.setInitialDirectory(new File("saves"));
+        file = fileChooser.showOpenDialog(stage);
+
+        //No file selected, don't do anything
+        if (file == null) {return;}
+
+        Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes(file);
         for(Node node : pair.getKey()){
             Node c = nodeController.addNode(node);
             canvas.getChildren().add(c);
@@ -116,6 +138,9 @@ public class Controller {
         }
     }
 
+    /**
+     * Saves level state in file
+     */
     private void PrepareSave() {
         String path = JOptionPane.showInputDialog("Save","What is the name of the savefile?");
         FileHandler.SaveNodes(nodeController.getNodes(),"saves/"+path);

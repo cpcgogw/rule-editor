@@ -13,7 +13,7 @@
    <children>
       <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="29.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="200.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="200.0">
                <children>
                   <VBox fx:id="node_types_box" prefHeight="771.0" prefWidth="100.0">
                      <children>
@@ -22,7 +22,7 @@
                         <Button fx:id="key_node_button" mnemonicParsing="false" prefHeight="93.0" prefWidth="100.0" style="-fx-background-color: #FFA500;" text="KeyNode" />
                         <Button fx:id="lock_node_button" mnemonicParsing="false" prefHeight="95.0" prefWidth="100.0" style="-fx-background-color: #FF0000;" text="LockNode" />
                         <Button fx:id="room_node_button" mnemonicParsing="false" prefHeight="98.0" prefWidth="100.0" style="-fx-background-color: #FFC0CB;" text="RoomNode" />
-                        <Button fx:id="room_node_button1" mnemonicParsing="false" prefHeight="98.0" prefWidth="100.0" style="-fx-background-color: #ABCDEF;" text="Edge" />
+                        <Button fx:id="edge_button" mnemonicParsing="false" prefHeight="98.0" prefWidth="100.0" style="-fx-background-color: #ABCDEF;" text="Edge" />
                      </children>
                   </VBox>
                </children>
@@ -35,8 +35,8 @@
           <Menu mnemonicParsing="false" text="File">
             <items>
                   <MenuItem mnemonicParsing="false" text="New" />
-                  <MenuItem mnemonicParsing="false" text="Open" />
-                  <MenuItem mnemonicParsing="false" text="Save" />
+                  <MenuItem fx:id="load_button" mnemonicParsing="false" text="Open" />
+                  <MenuItem fx:id="save_button" mnemonicParsing="false" text="Save" />
               <MenuItem mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
@@ -53,19 +53,15 @@
           </Menu>
         </menus>
       </MenuBar>
-      <ScrollPane layoutX="91.0" layoutY="429.0" prefHeight="400.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="429.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="200.0">
+      <ScrollPane layoutX="-3.0" layoutY="615.0" prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
+         <content>
+            <VBox prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <VBox layoutX="32.0" layoutY="41.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <children>
-                        <Button fx:id="move_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Move" />
-                        <Button fx:id="delete_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Delete" />
-                     </children>
-                  </VBox>
+                  <Button fx:id="move_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Move" />
+                  <Button fx:id="delete_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Delete" />
                </children>
-            </AnchorPane>
-        </content>
+            </VBox>
+         </content>
       </ScrollPane>
    </children>
 </AnchorPane>

@@ -5,6 +5,7 @@ import editor.model.Edge;
 import javafx.fxml.FXML;
 import editor.model.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -25,8 +26,6 @@ public class Controller {
      */
     @FXML
     private Button edge_button;
-    @FXML
-    private Button node_button;
     @FXML
     private Button delete_button;
     @FXML
@@ -54,10 +53,10 @@ public class Controller {
     private Pane canvas;
 
     @FXML
-    private Button save_button;
+    private MenuItem save_button;
 
     @FXML
-    private Button load_button;
+    private MenuItem load_button;
 
     public tools getActiveTool() {
         return activeTool;
@@ -80,31 +79,32 @@ public class Controller {
     public void initialize(){
         activeType = NodeType.START;
         activeTool = NODE;
-        node_button.setOnMouseClicked(mouseEvent -> {
-            activeTool = NODE;
-            node_types_box.setVisible(true);
-        });
         edge_button.setOnMouseClicked(mouseEvent -> activeTool = EDGE);
         delete_button.setOnMouseClicked(mouseEvent -> activeTool = DELETE);
         move_button.setOnMouseClicked(mouseEvent -> activeTool = MOVE);
 
-        start_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.START);
-        end_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.END);
-        key_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.KEY);
-        lock_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.LOCK);
-        room_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.ROOM);
+        start_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.START));
+        end_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.END));
+        key_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.KEY));
+        lock_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.LOCK));
+        room_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.ROOM));
 
-        save_button.setOnMouseClicked(mouseEvent -> PrepareSave());
-        load_button.setOnMouseClicked(mouseEvent -> PrepareLoad());
+        save_button.setOnAction(actionEvent -> PrepareSave());
+        load_button.setOnAction(actionEvent -> PrepareLoad());
 
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent));
 
         nodeController = new NodeController(this, canvas);
     }
 
+    private void activateType(NodeType type) {
+        activeType = type;
+        activeTool = NODE;
+    }
+
     private void PrepareLoad() {
         String path = JOptionPane.showInputDialog("Load","What is the name of the savefile?");
-        Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes(path);
+        Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes("saves/"+path);
         for(Node node : pair.getKey()){
             Node c = nodeController.addNode(node);
             canvas.getChildren().add(c);

@@ -77,6 +77,9 @@ public class Controller {
     private MenuItem close_button;
 
     @FXML
+    private MenuItem new_button;
+
+    @FXML
     private MenuItem level_menu_item;
 
     public tools getActiveTool() {
@@ -122,6 +125,8 @@ public class Controller {
 
 
         nodeController = new NodeController(canvas);
+
+        new_button.setOnAction(actionEvent -> {nodeController.clear(); canvas.getChildren().clear();});
     }
 
     private void showRules() {
@@ -154,6 +159,10 @@ public class Controller {
         //No file selected, don't do anything
         if (file == null) {return;}
 
+        //Clear before loading in elements
+        nodeController.clear();
+        canvas.getChildren().clear();
+
         Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes(file);
         for(Node node : pair.getKey()){
             Node c = nodeController.addNode(node);
@@ -171,6 +180,9 @@ public class Controller {
      */
     private void PrepareSave() {
         String path = JOptionPane.showInputDialog("Save","What is the name of the savefile?");
+        if (path == "" || path == null) {
+            path = "newfile";
+        }
         FileHandler.SaveNodes(nodeController.getNodes(),"saves/"+path);
     }
 

@@ -2,10 +2,13 @@ package editor.controller;
 
 import editor.FileHandler;
 import editor.model.Edge;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import editor.model.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -14,19 +17,24 @@ import static editor.controller.Controller.tools.*;
 import static editor.model.Node.DEFAULT_RADIUS;
 
 import editor.model.Node.NodeType;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 
 public class Controller {
     /**
      * Buttons for handling active tools
      */
+
+    @FXML
+    private AnchorPane window;
+
     @FXML
     private Button edge_button;
-    @FXML
-    private Button node_button;
     @FXML
     private Button delete_button;
     @FXML
@@ -54,10 +62,25 @@ public class Controller {
     private Pane canvas;
 
     @FXML
-    private Button save_button;
+    private Pane rule_canvas;
 
     @FXML
-    private Button load_button;
+    private MenuItem save_button;
+
+    @FXML
+    private MenuItem load_button;
+
+    @FXML
+    private MenuItem rule_menu_item;
+
+    @FXML
+    private MenuItem close_button;
+
+    @FXML
+    private MenuItem new_button;
+
+    @FXML
+    private MenuItem level_menu_item;
 
     public tools getActiveTool() {
         return activeTool;
@@ -73,38 +96,74 @@ public class Controller {
     public enum tools {
         EDGE, NODE, DELETE, MOVE
     }
-    private tools activeTool;
-    private NodeType activeType;
+    private FileChooser fileChooser = new FileChooser();
+    public static tools activeTool;
+    public static NodeType activeType;
 
     private NodeController nodeController;
     public void initialize(){
         activeType = NodeType.START;
         activeTool = NODE;
-        node_button.setOnMouseClicked(mouseEvent -> {
-            activeTool = NODE;
-            node_types_box.setVisible(true);
-        });
+
         edge_button.setOnMouseClicked(mouseEvent -> activeTool = EDGE);
         delete_button.setOnMouseClicked(mouseEvent -> activeTool = DELETE);
         move_button.setOnMouseClicked(mouseEvent -> activeTool = MOVE);
 
-        start_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.START);
-        end_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.END);
-        key_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.KEY);
-        lock_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.LOCK);
-        room_node_button.setOnMouseClicked(mouseEvent -> activeType = NodeType.ROOM);
+        start_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.START));
+        end_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.END));
+        key_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.KEY));
+        lock_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.LOCK));
+        room_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.ROOM));
 
-        save_button.setOnMouseClicked(mouseEvent -> PrepareSave());
-        load_button.setOnMouseClicked(mouseEvent -> PrepareLoad());
+        save_button.setOnAction(actionEvent -> PrepareSave());
+        load_button.setOnAction(actionEvent -> PrepareLoad());
+        rule_menu_item.setOnAction(actionEvent -> showRules());
+        level_menu_item.setOnAction(actionEvent -> showLevel());
+        close_button.setOnAction(actionEvent -> Platform.exit());
 
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent));
 
-        nodeController = new NodeController(this, canvas);
+
+        nodeController = new NodeController(canvas);
+
+        new_button.setOnAction(actionEvent -> {nodeController.clear(); canvas.getChildren().clear();});
     }
 
+    private void showRules() {
+        canvas.setVisible(false);
+        rule_canvas.setVisible(true);
+    }
+
+    private void showLevel() {
+        canvas.setVisible(true);
+        rule_canvas.setVisible(false);
+    }
+
+    private void activateType(NodeType type) {
+        activeType = type;
+        activeTool = NODE;
+    }
+
+    /**
+     * Loads file and appends elements to canvas
+     */
     private void PrepareLoad() {
-        String path = JOptionPane.showInputDialog("Load","What is the name of the savefile?");
-        Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes(path);
+        File file;
+        Stage stage;
+
+        fileChooser.setTitle("Explorer");
+        stage = (Stage) window.getScene().getWindow();
+        fileChooser.setInitialDirectory(new File("saves"));
+        file = fileChooser.showOpenDialog(stage);
+
+        //No file selected, don't do anything
+        if (file == null) {return;}
+
+        //Clear before loading in elements
+        nodeController.clear();
+        canvas.getChildren().clear();
+
+        Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes(file);
         for(Node node : pair.getKey()){
             Node c = nodeController.addNode(node);
             canvas.getChildren().add(c);
@@ -116,8 +175,14 @@ public class Controller {
         }
     }
 
+    /**
+     * Saves level state in file
+     */
     private void PrepareSave() {
         String path = JOptionPane.showInputDialog("Save","What is the name of the savefile?");
+        if (path == "" || path == null) {
+            path = "newfile";
+        }
         FileHandler.SaveNodes(nodeController.getNodes(),"saves/"+path);
     }
 

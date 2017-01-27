@@ -99,4 +99,9 @@ public class Edge extends QuadCurve{
     public Shape getArrow(){
         return arrowHead;
     }
+
+    public void delete() {
+        getStartNode().removeEdge(this);
+        getEndNode().removeEdge(this);
+    }
 }

@@ -19,30 +19,37 @@ public class NodeController {
 
     private final Pane canvas;
     private Edge currentEdge;
-    private Controller controller;
     private EdgeController edgeController;
     private boolean dragging;
     private ArrayList<Node> nodes;
 
     /**
-     * TODO: fix Node dependency, we dont want controller here, only using it to keep track of active tool.
-     * @param controller
+     *
      * @param canvas
      */
-    public NodeController(Controller controller, Pane canvas){
+    public NodeController(Pane canvas){
         currentEdge = null;
         dragging = false;
-        this.controller = controller;
         this.canvas = canvas;
         this.edgeController = new EdgeController(canvas);
         this.nodes = new ArrayList<Node>();
     }
 
+    /**
+     * Removes all Nodes and Edges
+     */
+    public void clear() {
+        nodes.clear();
+    }
+
     private void handlePressNode(MouseEvent event, Node c) {
-        if(controller.getActiveTool() == DELETE){
+        if(Controller.activeTool == DELETE){
             canvas.getChildren().remove(c);
             canvas.getChildren().removeAll(c.getEdges());
-        }else if(controller.getActiveTool() == EDGE){
+            for (Edge e: c.getEdges()) {
+                canvas.getChildren().removeAll(e.getArrow());
+            }
+        }else if(Controller.activeTool == EDGE){
             if(currentEdge == null){
                 currentEdge = edgeController.addEdge(c, null);
             }else{
@@ -50,7 +57,7 @@ public class NodeController {
                 canvas.getChildren().add(currentEdge);
                 currentEdge = null;
             }
-        }else if(controller.getActiveTool() == MOVE){
+        }else if(Controller.activeTool == MOVE){
             dragging = true;
         }
     }
@@ -69,7 +76,7 @@ public class NodeController {
         return c;
     }
     public Node addNode(double x, double y, int radius, Color color) {
-        Node c = new Node(x,y,radius,color, controller.getActiveType());
+        Node c = new Node(x,y,radius,color, Controller.activeType);
         c.setOnMousePressed(mouseEvent -> handlePressNode(mouseEvent, c));
         c.setOnMouseReleased(event -> {
             dragging = false;

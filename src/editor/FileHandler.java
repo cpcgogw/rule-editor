@@ -109,7 +109,7 @@ public class FileHandler {
             System.out.println("Error building document");
         }
     }
-    public static Pair<ArrayList<editor.model.Node>,ArrayList<Edge>> LoadNodes(String path){
+    public static Pair<ArrayList<editor.model.Node>,ArrayList<Edge>> LoadNodes(File file){
         HashMap<Integer,editor.model.Node> NodeMap = new HashMap<>();
         ArrayList<Edge> edges = new ArrayList<>();
 
@@ -117,7 +117,7 @@ public class FileHandler {
 
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-            Document doc = documentBuilder.parse(new File(path));
+            Document doc = documentBuilder.parse(file);
             doc.getDocumentElement().normalize(); //normalizes document
 
 

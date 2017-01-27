@@ -2,6 +2,7 @@ package editor.controller;
 
 import editor.FileHandler;
 import editor.model.Edge;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import editor.model.Node;
 import javafx.scene.control.Button;
@@ -73,6 +74,9 @@ public class Controller {
     private MenuItem rule_menu_item;
 
     @FXML
+    private MenuItem close_button;
+
+    @FXML
     private MenuItem level_menu_item;
 
     public tools getActiveTool() {
@@ -112,6 +116,7 @@ public class Controller {
         load_button.setOnAction(actionEvent -> PrepareLoad());
         rule_menu_item.setOnAction(actionEvent -> showRules());
         level_menu_item.setOnAction(actionEvent -> showLevel());
+        close_button.setOnAction(actionEvent -> Platform.exit());
 
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent));
 

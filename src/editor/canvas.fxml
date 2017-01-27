@@ -38,7 +38,7 @@
                   <MenuItem mnemonicParsing="false" text="New" />
                   <MenuItem fx:id="load_button" mnemonicParsing="false" text="Open" />
                   <MenuItem fx:id="save_button" mnemonicParsing="false" text="Save" />
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem fx:id="close_button" mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="View">

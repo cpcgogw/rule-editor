@@ -17,7 +17,6 @@ import static editor.controller.Controller.tools.*;
  */
 public class NodeController {
 
-    private final Pane canvas;
     private Edge currentEdge;
     private EdgeController edgeController;
     private boolean dragging;
@@ -25,29 +24,27 @@ public class NodeController {
 
     /**
      *
-     * @param canvas
      */
-    public NodeController(Pane canvas){
+    public NodeController(){
         currentEdge = null;
         dragging = false;
-        this.canvas = canvas;
-        this.edgeController = new EdgeController(canvas);
+        this.edgeController = new EdgeController();
         this.nodes = new ArrayList<Node>();
     }
 
     private void handlePressNode(MouseEvent event, Node c) {
         if(Controller.activeTool == DELETE){
-            canvas.getChildren().remove(c);
-            canvas.getChildren().removeAll(c.getEdges());
+            Controller.activeCanvas.getChildren().remove(c);
+            Controller.activeCanvas.getChildren().removeAll(c.getEdges());
             for (Edge e: c.getEdges()) {
-                canvas.getChildren().removeAll(e.getArrow());
+                Controller.activeCanvas.getChildren().removeAll(e.getArrow());
             }
         }else if(Controller.activeTool == EDGE){
             if(currentEdge == null){
                 currentEdge = edgeController.addEdge(c, null);
             }else{
-                canvas.getChildren().add(currentEdge.setEndNode(c));
-                canvas.getChildren().add(currentEdge);
+                Controller.activeCanvas.getChildren().add(currentEdge.setEndNode(c));
+                Controller.activeCanvas.getChildren().add(currentEdge);
                 currentEdge = null;
             }
         }else if(Controller.activeTool == MOVE){

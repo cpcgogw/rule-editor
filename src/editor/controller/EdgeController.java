@@ -11,10 +11,8 @@ import java.awt.event.MouseEvent;
  * Created by vilddjur on 1/25/17.
  */
 public class EdgeController {
-    private Pane canvas;
     private boolean dragging;
-    public EdgeController(Pane canvas){
-        this.canvas = canvas;
+    public EdgeController(){
         dragging = false;
     }
 
@@ -40,7 +38,7 @@ public class EdgeController {
     private void handlePress(javafx.scene.input.MouseEvent mouseEvent, Edge e) {
         if(Controller.activeTool == Controller.tools.DELETE){
             e.delete();
-            canvas.getChildren().removeAll(e, e.getArrow());
+            Controller.activeCanvas.getChildren().removeAll(e, e.getArrow());
         }else if(Controller.activeTool == Controller.tools.MOVE){
             dragging = true;
         }

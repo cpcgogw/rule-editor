@@ -7,6 +7,7 @@ import editor.model.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -53,7 +54,7 @@ public class Controller {
     private Pane canvas;
 
     @FXML
-    private Pane rule_canvas;
+    private AnchorPane rule_pane;
 
     @FXML
     private MenuItem save_button;
@@ -84,40 +85,49 @@ public class Controller {
     public static tools activeTool;
     public static NodeType activeType;
 
+    public static Pane activeCanvas;
+
     private NodeController nodeController;
     public void initialize(){
         activeType = NodeType.START;
         activeTool = NODE;
+        activeCanvas = canvas;
 
         edge_button.setOnMouseClicked(mouseEvent -> activeTool = EDGE);
+        // init editing buttons
         delete_button.setOnMouseClicked(mouseEvent -> activeTool = DELETE);
         move_button.setOnMouseClicked(mouseEvent -> activeTool = MOVE);
-
+        // init node buttons
         start_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.START));
         end_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.END));
         key_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.KEY));
         lock_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.LOCK));
         room_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.ROOM));
-
+        // init top menu
         save_button.setOnAction(actionEvent -> PrepareSave());
         load_button.setOnAction(actionEvent -> PrepareLoad());
         rule_menu_item.setOnAction(actionEvent -> showRules());
         level_menu_item.setOnAction(actionEvent -> showLevel());
 
-        canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent));
+        //init level canvas
+        canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent, canvas));
 
+        //init rule canvas
+        
 
-        nodeController = new NodeController(canvas);
+        nodeController = new NodeController();
     }
 
     private void showRules() {
         canvas.setVisible(false);
-        rule_canvas.setVisible(true);
+        rule_pane.setVisible(true);
+        //activeCanvas = rule_canvas(?);
     }
 
     private void showLevel() {
         canvas.setVisible(true);
-        rule_canvas.setVisible(false);
+        rule_pane.setVisible(false);
+        activeCanvas = canvas;
     }
 
     private void activateType(NodeType type) {
@@ -144,11 +154,11 @@ public class Controller {
         FileHandler.SaveNodes(nodeController.getNodes(),"saves/"+path);
     }
 
-    private void handlePress(MouseEvent event) {
+    private void handlePress(MouseEvent event, Pane c) {
         if(activeTool == NODE){
             Node node = nodeController.addNode(event.getX(), event.getY(), DEFAULT_RADIUS, Color.BLUE);
 
-            canvas.getChildren().add(node);
+            c.getChildren().add(node);
         }
     }
 }

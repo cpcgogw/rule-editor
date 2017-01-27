@@ -21,7 +21,7 @@ public class EdgeController {
     public Edge addEdge(Node c, Node s) {
         Edge e = new Edge(c, s);
 
-        e.setOnMousePressed(mouseEvent -> dragging = true);
+        e.setOnMousePressed(mouseEvent -> handlePress(mouseEvent));
         e.setOnMouseReleased(event -> {
             dragging = false;
         });
@@ -36,6 +36,15 @@ public class EdgeController {
 
         return e;
     }
+
+    private void handlePress(javafx.scene.input.MouseEvent mouseEvent) {
+        if(Controller.activeTool == Controller.tools.DELETE){
+
+        }else if(Controller.activeTool == Controller.tools.MOVE){
+            dragging = true;
+        }
+    }
+
     public Edge addEdge(Edge e) {
         e.setOnMousePressed(mouseEvent -> dragging = true);
         e.setOnMouseReleased(event -> {

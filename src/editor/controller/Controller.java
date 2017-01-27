@@ -72,8 +72,8 @@ public class Controller {
     public enum tools {
         EDGE, NODE, DELETE, MOVE
     }
-    private tools activeTool;
-    private NodeType activeType;
+    public static tools activeTool;
+    public static NodeType activeType;
 
     private NodeController nodeController;
     public void initialize(){
@@ -94,7 +94,7 @@ public class Controller {
 
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent));
 
-        nodeController = new NodeController(this, canvas);
+        nodeController = new NodeController(canvas);
     }
 
     private void activateType(NodeType type) {

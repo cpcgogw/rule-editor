@@ -92,7 +92,7 @@ public class FileHandler {
             DOMSource source = new DOMSource(doc);
             try {
                 // location and name of XML file you can change as per need
-                FileWriter fos = new FileWriter(path);
+                FileWriter fos = new FileWriter(path+".xml");
                 StreamResult result = new StreamResult(fos);
                 transformer.transform(source, result);
 

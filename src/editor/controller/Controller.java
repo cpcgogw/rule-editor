@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import editor.model.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
@@ -61,10 +63,15 @@ public class Controller {
 
     @FXML
     private Pane canvas;
+
     @FXML
     private Pane rule_canvas;
     @FXML
     private GridPane rule_pane;
+    @FXML
+    private TabPane rule_tab_pane;
+    @FXML
+    private Button new_scenario_button;
 
     @FXML
     private MenuItem save_button;
@@ -84,12 +91,22 @@ public class Controller {
     @FXML
     private MenuItem level_menu_item;
 
+    private ArrayList<Pane> scenarios;
+
     public tools getActiveTool() {
         return activeTool;
     }
 
     public NodeType getActiveType(){
         return activeType;
+    }
+
+    /**
+     * Returns the activeCanvas which is set when the mouse enters a pane we want to draw our graphs in.
+     * @return The latest activated canvas.
+     */
+    public static Pane getActiveCanvas() {
+        return activeCanvas;
     }
 
     /**
@@ -106,6 +123,7 @@ public class Controller {
 
     private NodeController nodeController;
     public void initialize(){
+        scenarios = new ArrayList<Pane>();
         activeType = NodeType.START;
         activeTool = NODE;
         activeCanvas = rule_canvas;
@@ -129,10 +147,12 @@ public class Controller {
 
         //init level canvas
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent, canvas));
+        canvas.setOnMouseEntered(event -> requestFocus(canvas));
 
         //init rule canvas
         rule_canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent, rule_canvas));
-
+        rule_canvas.setOnMouseEntered(mouseEvent -> requestFocus(rule_canvas));
+        new_scenario_button.setOnMouseClicked(mouseEvent -> addTab("new tab"));
         nodeController = new NodeController();
 
         new_button.setOnAction(actionEvent -> {nodeController.clear(); canvas.getChildren().clear();});
@@ -156,7 +176,9 @@ public class Controller {
         activeType = type;
         activeTool = NODE;
     }
-
+    private void requestFocus(Pane p){
+        activeCanvas = p;
+    }
     /**
      * Loads file and appends elements to canvas
      */
@@ -205,5 +227,17 @@ public class Controller {
 
             c.getChildren().add(node);
         }
+    }
+    private void addTab(String s){
+        Tab tab = new Tab(s);
+        Pane c = new Pane();
+        c.setOnMouseClicked(mouseEvent -> {
+            activeCanvas = c;
+            handlePress(mouseEvent, c);
+        });
+        c.setOnMouseEntered(event -> requestFocus(c));
+        tab.setContent(c);
+        rule_tab_pane.getTabs().add(tab);
+        scenarios.add(c);
     }
 }

@@ -41,17 +41,17 @@ public class NodeController {
 
     private void handlePressNode(MouseEvent event, Node c) {
         if(Controller.activeTool == DELETE){
-            Controller.activeCanvas.getChildren().remove(c);
-            Controller.activeCanvas.getChildren().removeAll(c.getEdges());
+            Controller.getActiveCanvas().getChildren().remove(c);
+            Controller.getActiveCanvas().getChildren().removeAll(c.getEdges());
             for (Edge e: c.getEdges()) {
-                Controller.activeCanvas.getChildren().removeAll(e.getArrow());
+                Controller.getActiveCanvas().getChildren().removeAll(e.getArrow());
             }
         }else if(Controller.activeTool == EDGE){
             if(currentEdge == null){
                 currentEdge = edgeController.addEdge(c, null);
             }else{
-                Controller.activeCanvas.getChildren().add(currentEdge.setEndNode(c));
-                Controller.activeCanvas.getChildren().add(currentEdge);
+                Controller.getActiveCanvas().getChildren().add(currentEdge.setEndNode(c));
+                Controller.getActiveCanvas().getChildren().add(currentEdge);
                 currentEdge = null;
             }
         }else if(Controller.activeTool == MOVE){

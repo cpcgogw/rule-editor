@@ -38,7 +38,7 @@ public class EdgeController {
     private void handlePress(javafx.scene.input.MouseEvent mouseEvent, Edge e) {
         if(Controller.activeTool == Controller.tools.DELETE){
             e.delete();
-            Controller.activeCanvas.getChildren().removeAll(e, e.getArrow());
+            Controller.getActiveCanvas().getChildren().removeAll(e, e.getArrow());
         }else if(Controller.activeTool == Controller.tools.MOVE){
             dragging = true;
         }

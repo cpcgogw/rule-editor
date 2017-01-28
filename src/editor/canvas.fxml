@@ -5,15 +5,14 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.RowConstraints?>
 <AnchorPane fx:id="window" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="editor.controller.Controller">
    <children>
       <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="29.0">
@@ -44,20 +43,7 @@
                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
            </rowConstraints>
            <children>
-               <TabPane fx:id="rule_tab_pane" prefHeight="671.0" prefWidth="762.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1">
-                   <tabs>
-                       <Tab text="Untitled Tab 1">
-                           <content>
-                               <Pane />
-                           </content>
-                       </Tab>
-                       <Tab text="Untitled Tab 2">
-                           <content>
-                               <Pane />
-                           </content>
-                       </Tab>
-                   </tabs>
-               </TabPane>
+               <TabPane fx:id="rule_tab_pane" prefHeight="671.0" prefWidth="762.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1" />
                <Pane fx:id="rule_canvas" prefHeight="671.0" prefWidth="437.0" style="-fx-background-color: #EFA;" />
            </children>
        </GridPane>
@@ -86,10 +72,11 @@
       </MenuBar>
       <ScrollPane layoutX="-3.0" layoutY="615.0" prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
          <content>
-            <VBox prefHeight="200.0" prefWidth="100.0">
+            <VBox prefHeight="255.0" prefWidth="197.0">
                <children>
                   <Button fx:id="move_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Move" />
                   <Button fx:id="delete_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Delete" />
+                  <Button fx:id="new_scenario_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="129.0" text="New Scenario" />
                </children>
             </VBox>
          </content>

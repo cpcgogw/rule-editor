@@ -7,9 +7,7 @@ import java.util.ArrayList;
  */
 public class Pattern {
     public ArrayList<Node> nodes;
-    public ArrayList<Edge> edges;
     public Pattern(){
         nodes = new ArrayList<Node>();
-        edges = new ArrayList<Edge>();
     }
 }

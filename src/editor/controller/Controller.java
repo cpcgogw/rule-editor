@@ -2,6 +2,8 @@ package editor.controller;
 
 import editor.FileHandler;
 import editor.model.Edge;
+import editor.model.Pattern;
+import editor.model.Rule;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import editor.model.Node;
@@ -27,6 +29,7 @@ import javafx.util.Pair;
 import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Controller {
     /**
@@ -72,6 +75,8 @@ public class Controller {
     private TabPane rule_tab_pane;
     @FXML
     private Button new_scenario_button;
+    private Rule rule;
+
 
     @FXML
     private MenuItem save_button;
@@ -91,7 +96,8 @@ public class Controller {
     @FXML
     private MenuItem level_menu_item;
 
-    private ArrayList<Pane> scenarios;
+    private HashMap<Pane, Pattern> scenarios;
+    private Pattern matchingPattern;
 
     public tools getActiveTool() {
         return activeTool;
@@ -123,7 +129,7 @@ public class Controller {
 
     private NodeController nodeController;
     public void initialize(){
-        scenarios = new ArrayList<Pane>();
+        scenarios = new HashMap<Pane, Pattern>();
         activeType = NodeType.START;
         activeTool = NODE;
         activeCanvas = rule_canvas;
@@ -156,6 +162,8 @@ public class Controller {
         nodeController = new NodeController();
 
         new_button.setOnAction(actionEvent -> {nodeController.clear(); canvas.getChildren().clear();});
+        matchingPattern = new Pattern();
+        rule = new Rule(matchingPattern);
     }
 
     private void showRules() {
@@ -163,6 +171,18 @@ public class Controller {
         rule_pane.setVisible(true);
 
         activeCanvas = rule_canvas;
+
+        System.out.println("Dumping current rule: \n MatchingPattern: ");
+        for (Node n : rule.matchingPattern.nodes) {
+            System.out.println("  node: " + n.getType().toString());
+        }
+        System.out.println(" possibleOutcomes: ");
+        for (Pattern p : rule.possibleTranslations){
+            System.out.println("  outcome: ");
+            for (Node n : p.nodes) {
+                System.out.println("   node: " + n.getType().toString());
+            }
+        }
     }
 
     private void showLevel() {
@@ -226,6 +246,11 @@ public class Controller {
             Node node = nodeController.addNode(event.getX(), event.getY(), DEFAULT_RADIUS, Color.BLUE);
 
             c.getChildren().add(node);
+            if(c == rule_canvas){
+                matchingPattern.nodes.add(node);
+            }else if(c != canvas){
+                scenarios.get(c).nodes.add(node);
+            }
         }
     }
     private void addTab(String s){
@@ -238,6 +263,8 @@ public class Controller {
         c.setOnMouseEntered(event -> requestFocus(c));
         tab.setContent(c);
         rule_tab_pane.getTabs().add(tab);
-        scenarios.add(c);
+        Pattern p = new Pattern();
+        rule.possibleTranslations.add(p);
+        scenarios.put(c, p);
     }
 }

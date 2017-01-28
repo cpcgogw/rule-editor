@@ -108,7 +108,7 @@ public class Controller {
     public void initialize(){
         activeType = NodeType.START;
         activeTool = NODE;
-        activeCanvas = canvas;
+        activeCanvas = rule_canvas;
 
         edge_button.setOnMouseClicked(mouseEvent -> activeTool = EDGE);
         // init editing buttons
@@ -131,7 +131,7 @@ public class Controller {
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent, canvas));
 
         //init rule canvas
-        
+        rule_canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent, rule_canvas));
 
         nodeController = new NodeController();
 
@@ -141,12 +141,14 @@ public class Controller {
     private void showRules() {
         canvas.setVisible(false);
         rule_pane.setVisible(true);
-        
+
+        activeCanvas = rule_canvas;
     }
 
     private void showLevel() {
         canvas.setVisible(true);
         rule_pane.setVisible(false);
+
         activeCanvas = canvas;
     }
 

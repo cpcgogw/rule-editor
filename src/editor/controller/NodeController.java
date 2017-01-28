@@ -32,6 +32,13 @@ public class NodeController {
         this.nodes = new ArrayList<Node>();
     }
 
+    /**
+     * Removes all Nodes and Edges
+     */
+    public void clear() {
+        nodes.clear();
+    }
+
     private void handlePressNode(MouseEvent event, Node c) {
         if(Controller.activeTool == DELETE){
             Controller.activeCanvas.getChildren().remove(c);

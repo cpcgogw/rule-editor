@@ -81,20 +81,22 @@ public class FileHandler {
                 }
             }
 
-            // Save the document to the disk file
+
+            /* Saves File at specific directory
+            */
+
             Transformer transformer = TransformerFactory.newInstance().newTransformer();
 
-            // format the XML nicely
+            //formatting for human readability.
             transformer.setOutputProperty(
                     "{http://xml.apache.org/xslt}indent-amount", "4");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
 
             DOMSource source = new DOMSource(doc);
             try {
-                // location and name of XML file you can change as per need
-                FileWriter fos = new FileWriter(path);
-                StreamResult result = new StreamResult(fos);
-                transformer.transform(source, result);
+                FileWriter fileWriter = new FileWriter(path);
+                StreamResult streamResult = new StreamResult(fileWriter);
+                transformer.transform(source, streamResult);
 
             } catch (Exception e){
                 e.printStackTrace();
@@ -107,7 +109,7 @@ public class FileHandler {
             System.out.println("Error building document");
         }
     }
-    public static Pair<ArrayList<editor.model.Node>,ArrayList<Edge>> LoadNodes(String path){
+    public static Pair<ArrayList<editor.model.Node>,ArrayList<Edge>> LoadNodes(File file){
         HashMap<Integer,editor.model.Node> NodeMap = new HashMap<>();
         ArrayList<Edge> edges = new ArrayList<>();
 
@@ -115,7 +117,7 @@ public class FileHandler {
 
             DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
-            Document doc = documentBuilder.parse(new File(path));
+            Document doc = documentBuilder.parse(file);
             doc.getDocumentElement().normalize(); //normalizes document
 
 
@@ -189,6 +191,93 @@ public class FileHandler {
         Pair pair = new Pair(new ArrayList<>(NodeMap.values()),edges);
         return pair;
     }
+    public static String[] LoadTags(String path) {
+        String[] tags = null;
+        try {
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 
+            Document doc = documentBuilder.parse(new File(path));
+            doc.getDocumentElement().normalize(); //normalizes document
+
+
+            //Defines all nodes...
+/*
+            NodeList xnodeList = doc.getElementsByTagName("Node"); //grab all "Node" from XML-file
+            for (int i = 0; i < xnodeList.getLength(); i++) {
+                Node xNode = xnodeList.item(i);
+
+
+                if (xNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) xNode;
+
+                    //Extract elements of node
+                    int id = Integer.parseInt(element.getElementsByTagName("ID").item(0).getTextContent());
+                    editor.model.Node.NodeType type = editor.model.Node.NodeType.valueOf(element.getElementsByTagName("Tag").item(0).getTextContent());
+                    double x = Double.parseDouble(element.getElementsByTagName("X").item(0).getTextContent());
+                    double y = Double.parseDouble(element.getElementsByTagName("Y").item(0).getTextContent());
+                    //Store the extracted Node
+
+                    editor.model.Node node = new editor.model.Node(id, x, y, editor.model.Node.DEFAULT_RADIUS, Color.RED, type);
+
+                }
+
+            }
+*/
+            NodeList tagNode = doc.getElementsByTagName("Tag");
+            int size = tagNode.getLength();
+            tags = new String[size];
+            for(int i = 0;i < size;i++){
+                Node item = tagNode.item(i);
+                if (item.getNodeType() == Node.ELEMENT_NODE) {
+                    Element element = (Element) item;
+                    tags[i] = element.getTextContent();
+
+                }
+            }
+
+        }
+        catch (Exception e){e.printStackTrace();}
+        return tags;
+    }
+
+    public static void SaveTags(String[] tags, String path){
+        try {
+            DocumentBuilderFactory documentBuilderFactoryFact = DocumentBuilderFactory.newInstance();
+            DocumentBuilder build = documentBuilderFactoryFact.newDocumentBuilder();
+            Document doc = build.newDocument();
+
+
+            Element elemTags = doc.createElement("Tags");
+            for(int i = 0; i < tags.length; i++) {
+                Element elemTag = doc.createElement("Tag");
+                elemTag.appendChild(doc.createTextNode(tags[i]));
+                elemTags.appendChild(elemTag);
+            }
+
+            doc.appendChild(elemTags);
+
+
+            /* Saves File at specific directory
+            */
+
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+
+            //formatting for human readability.
+            transformer.setOutputProperty(
+                    "{http://xml.apache.org/xslt}indent-amount", "4");
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+
+            DOMSource source = new DOMSource(doc);
+            try {
+                FileWriter fileWriter = new FileWriter(path);
+                StreamResult streamResult = new StreamResult(fileWriter);
+                transformer.transform(source, streamResult);
+
+            } catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        catch (Exception e){e.printStackTrace();}
+    }
 }
 

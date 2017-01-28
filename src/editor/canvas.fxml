@@ -11,7 +11,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="editor.controller.Controller">
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<AnchorPane fx:id="window" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="editor.controller.Controller">
    <children>
       <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="29.0">
         <content>
@@ -32,33 +35,40 @@
         </content>
       </ScrollPane>
       <Pane fx:id="canvas" minHeight="593.0" minWidth="1200.0" prefHeight="800.0" prefWidth="712.0" style="-fx-background-color: #EFE;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" />
-      <AnchorPane fx:id="rule_pane" layoutX="200.0" layoutY="29.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
-         <children>
-            <Pane fx:id="rule_canvas" prefHeight="671.0" prefWidth="437.0" style="-fx-background-color: #EFA;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <TabPane fx:id="rule_tab_pane" layoutX="478.0" layoutY="194.0" prefHeight="671.0" prefWidth="762.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-              <tabs>
-                <Tab text="Untitled Tab 1">
-                  <content>
-                        <Pane />
-                  </content>
-                </Tab>
-                <Tab text="Untitled Tab 2">
-                  <content>
-                        <Pane />
-                  </content>
-                </Tab>
-              </tabs>
-            </TabPane>
-         </children>
-      </AnchorPane>
+       <GridPane fx:id="rule_pane" layoutX="200.0" layoutY="29.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
+           <columnConstraints>
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+           </columnConstraints>
+           <rowConstraints>
+               <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+           </rowConstraints>
+           <children>
+               <TabPane fx:id="rule_tab_pane" prefHeight="671.0" prefWidth="762.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1">
+                   <tabs>
+                       <Tab text="Untitled Tab 1">
+                           <content>
+                               <Pane />
+                           </content>
+                       </Tab>
+                       <Tab text="Untitled Tab 2">
+                           <content>
+                               <Pane />
+                           </content>
+                       </Tab>
+                   </tabs>
+               </TabPane>
+               <Pane fx:id="rule_canvas" prefHeight="671.0" prefWidth="437.0" style="-fx-background-color: #EFA;" />
+           </children>
+       </GridPane>
       <MenuBar prefHeight="29.0" prefWidth="1306.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
-                  <MenuItem mnemonicParsing="false" text="New" />
+                  <MenuItem fx:id="new_button" mnemonicParsing="false" text="New" />
                   <MenuItem fx:id="load_button" mnemonicParsing="false" text="Open" />
                   <MenuItem fx:id="save_button" mnemonicParsing="false" text="Save" />
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem fx:id="close_button" mnemonicParsing="false" text="Close" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="View">

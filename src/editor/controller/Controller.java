@@ -2,12 +2,14 @@ package editor.controller;
 
 import editor.FileHandler;
 import editor.model.Edge;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import editor.model.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -16,15 +18,22 @@ import static editor.controller.Controller.tools.*;
 import static editor.model.Node.DEFAULT_RADIUS;
 
 import editor.model.Node.NodeType;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import javafx.util.Pair;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.ArrayList;
 
 public class Controller {
     /**
      * Buttons for handling active tools
      */
+
+    @FXML
+    private AnchorPane window;
+
     @FXML
     private Button edge_button;
     @FXML
@@ -52,9 +61,10 @@ public class Controller {
 
     @FXML
     private Pane canvas;
-
     @FXML
-    private AnchorPane rule_pane;
+    private Pane rule_canvas;
+    @FXML
+    private GridPane rule_pane;
 
     @FXML
     private MenuItem save_button;
@@ -64,6 +74,12 @@ public class Controller {
 
     @FXML
     private MenuItem rule_menu_item;
+
+    @FXML
+    private MenuItem close_button;
+
+    @FXML
+    private MenuItem new_button;
 
     @FXML
     private MenuItem level_menu_item;
@@ -82,6 +98,7 @@ public class Controller {
     public enum tools {
         EDGE, NODE, DELETE, MOVE
     }
+    private FileChooser fileChooser = new FileChooser();
     public static tools activeTool;
     public static NodeType activeType;
 
@@ -108,6 +125,7 @@ public class Controller {
         load_button.setOnAction(actionEvent -> PrepareLoad());
         rule_menu_item.setOnAction(actionEvent -> showRules());
         level_menu_item.setOnAction(actionEvent -> showLevel());
+        close_button.setOnAction(actionEvent -> Platform.exit());
 
         //init level canvas
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent, canvas));
@@ -116,12 +134,14 @@ public class Controller {
         
 
         nodeController = new NodeController();
+
+        new_button.setOnAction(actionEvent -> {nodeController.clear(); canvas.getChildren().clear();});
     }
 
     private void showRules() {
         canvas.setVisible(false);
         rule_pane.setVisible(true);
-        //activeCanvas = rule_canvas(?);
+        
     }
 
     private void showLevel() {
@@ -135,9 +155,26 @@ public class Controller {
         activeTool = NODE;
     }
 
+    /**
+     * Loads file and appends elements to canvas
+     */
     private void PrepareLoad() {
-        String path = JOptionPane.showInputDialog("Load","What is the name of the savefile?");
-        Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes("saves/"+path);
+        File file;
+        Stage stage;
+
+        fileChooser.setTitle("Explorer");
+        stage = (Stage) window.getScene().getWindow();
+        fileChooser.setInitialDirectory(new File("saves"));
+        file = fileChooser.showOpenDialog(stage);
+
+        //No file selected, don't do anything
+        if (file == null) {return;}
+
+        //Clear before loading in elements
+        nodeController.clear();
+        canvas.getChildren().clear();
+
+        Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes(file);
         for(Node node : pair.getKey()){
             Node c = nodeController.addNode(node);
             canvas.getChildren().add(c);
@@ -149,8 +186,14 @@ public class Controller {
         }
     }
 
+    /**
+     * Saves level state in file
+     */
     private void PrepareSave() {
         String path = JOptionPane.showInputDialog("Save","What is the name of the savefile?");
+        if (path == "" || path == null) {
+            path = "newfile";
+        }
         FileHandler.SaveNodes(nodeController.getNodes(),"saves/"+path);
     }
 

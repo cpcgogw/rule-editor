@@ -75,7 +75,7 @@ public class Controller {
     private TabPane rule_tab_pane;
     @FXML
     private Button new_scenario_button;
-    private Rule rule;
+    private Rule activeRule;
 
 
     @FXML
@@ -162,8 +162,10 @@ public class Controller {
         nodeController = new NodeController();
 
         new_button.setOnAction(actionEvent -> {nodeController.clear(); canvas.getChildren().clear();});
+
+        // initialize currentRule;
         matchingPattern = new Pattern();
-        rule = new Rule(matchingPattern);
+        activeRule = new Rule(matchingPattern);
     }
 
     private void showRules() {
@@ -173,11 +175,11 @@ public class Controller {
         activeCanvas = rule_canvas;
 
         System.out.println("Dumping current rule: \n MatchingPattern: ");
-        for (Node n : rule.matchingPattern.nodes) {
+        for (Node n : activeRule.matchingPattern.nodes) {
             System.out.println("  node: " + n.getType().toString());
         }
         System.out.println(" possibleOutcomes: ");
-        for (Pattern p : rule.possibleTranslations){
+        for (Pattern p : activeRule.possibleTranslations){
             System.out.println("  outcome: ");
             for (Node n : p.nodes) {
                 System.out.println("   node: " + n.getType().toString());
@@ -238,7 +240,11 @@ public class Controller {
         if (path == "" || path == null) {
             path = "newfile";
         }
-        FileHandler.SaveNodes(nodeController.getNodes(),"saves/"+path);
+        if(rule_pane.isVisible()){
+            activeRule.save(path);
+        }else {
+            FileHandler.SaveNodes(nodeController.getNodes(), "saves/" + path);
+        }
     }
 
     private void handlePress(MouseEvent event, Pane c) {
@@ -264,7 +270,7 @@ public class Controller {
         tab.setContent(c);
         rule_tab_pane.getTabs().add(tab);
         Pattern p = new Pattern();
-        rule.possibleTranslations.add(p);
+        activeRule.possibleTranslations.add(p);
         scenarios.put(c, p);
     }
 }

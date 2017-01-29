@@ -83,6 +83,8 @@ public class Controller {
 
     @FXML
     private MenuItem load_level_button;
+    @FXML
+    private MenuItem load_rule_button;
 
     @FXML
     private MenuItem rule_menu_item;
@@ -147,6 +149,7 @@ public class Controller {
         // init top menu
         save_button.setOnAction(actionEvent -> PrepareSave());
         load_level_button.setOnAction(actionEvent -> PrepareLoadLevel());
+        load_rule_button.setOnAction(actionEvent -> PrepareLoadRule());
         rule_menu_item.setOnAction(actionEvent -> showRules());
         level_menu_item.setOnAction(actionEvent -> showLevel());
         close_button.setOnAction(actionEvent -> Platform.exit());
@@ -201,6 +204,53 @@ public class Controller {
     private void requestFocus(Pane p){
         activeCanvas = p;
     }
+
+    private void PrepareLoadRule() {
+        File file;
+        Stage stage;
+
+        fileChooser.setTitle("Explorer");
+        stage = (Stage) window.getScene().getWindow();
+        fileChooser.setInitialDirectory(new File("."));
+        file = fileChooser.showOpenDialog(stage);
+
+        //No file selected, don't do anything
+        if (file == null) {return;}
+
+        //Clear canavases before loading in elements
+        rule_canvas.getChildren().clear();
+        rule_tab_pane.getTabs().clear();
+        scenarios.clear();
+
+        //new rule
+        matchingPattern = new Pattern();
+        activeRule = new Rule(matchingPattern);
+
+
+        Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadMatchingPattern(file);
+        activeCanvas = rule_canvas;
+        insertIntoCanvasAndList(rule_canvas, matchingPattern.nodes, pair);
+
+        ArrayList<Pair<ArrayList<Node>,ArrayList<Edge>>> translations = FileHandler.LoadTranslations(file);
+        for (Pair<ArrayList<Node>, ArrayList<Edge>> p : translations){
+
+            Pair<Pane, Pattern> panePatternPair = addTab("saved tab");
+            insertIntoCanvasAndList(panePatternPair.getKey(), panePatternPair.getValue().nodes, p);
+        }
+    }
+
+    private void insertIntoCanvasAndList(Pane canvas, ArrayList<Node> nodes, Pair<ArrayList<Node>, ArrayList<Edge>> pair) {
+        for(Node node : pair.getKey()){
+            nodes.add(node);
+            canvas.getChildren().add(node);
+        }
+        for(Edge e : pair.getValue()){
+            Edge c = nodeController.getEdgeController().addEdge(e);
+            canvas.getChildren().add(c.getArrow());
+            canvas.getChildren().add(c);
+        }
+    }
+
     /**
      * Loads file and appends elements to canvas
      */
@@ -219,6 +269,7 @@ public class Controller {
         //Clear before loading in elements
         nodeController.clear();
         canvas.getChildren().clear();
+
 
         Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadNodes(file);
         for(Node node : pair.getKey()){
@@ -259,7 +310,7 @@ public class Controller {
             }
         }
     }
-    private void addTab(String s){
+    private Pair<Pane, Pattern> addTab(String s){
         Tab tab = new Tab(s);
         Pane c = new Pane();
         c.setOnMouseClicked(mouseEvent -> {
@@ -272,5 +323,6 @@ public class Controller {
         Pattern p = new Pattern();
         activeRule.possibleTranslations.add(p);
         scenarios.put(c, p);
+        return new Pair<>(c, p);
     }
 }

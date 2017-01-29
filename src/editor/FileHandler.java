@@ -110,7 +110,7 @@ public class FileHandler {
         }
     }
     public static Pair<ArrayList<editor.model.Node>,ArrayList<Edge>> LoadNodes(File file){
-        HashMap<Integer,editor.model.Node> NodeMap = new HashMap<>();
+        HashMap<Integer,editor.model.Node> nodeMap = new HashMap<>();
         ArrayList<Edge> edges = new ArrayList<>();
 
         try {
@@ -124,56 +124,14 @@ public class FileHandler {
             //Defines all nodes...
 
             NodeList xnodeList = doc.getElementsByTagName("Node"); //grab all "Node" from XML-file
-            for(int i = 0; i < xnodeList.getLength(); i++){
-                Node xNode = xnodeList.item(i);
-
-
-
-                if (xNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) xNode;
-
-                    //Extract elements of node
-                    int id = Integer.parseInt(element.getElementsByTagName("ID").item(0).getTextContent());
-                    editor.model.Node.NodeType type = editor.model.Node.NodeType.valueOf(element.getElementsByTagName("Tag").item(0).getTextContent());
-                    double x = Double.parseDouble(element.getElementsByTagName("X").item(0).getTextContent());
-                    double y = Double.parseDouble(element.getElementsByTagName("Y").item(0).getTextContent());
-                    //Store the extracted Node
-
-                    editor.model.Node node = new editor.model.Node(id,x,y, editor.model.Node.DEFAULT_RADIUS, Color.RED,type);
-                    NodeMap.put(id,node);
-                }
-
-            }
-
+            nodeMap = extractNodes(xnodeList);
 
 
 
             //Defines all edges...
             HashMap<Integer,ArrayList<Integer>> edgeMap = new HashMap<>(); //HashMap used for easy fix of duplicate edges.
             xnodeList = doc.getElementsByTagName("Edge");//grab all "Edge" from XML-file
-            for(int i = 0; i < xnodeList.getLength(); i++){
-                Node xNode = xnodeList.item(i);
-
-                if (xNode.getNodeType() == Node.ELEMENT_NODE) {
-                    Element element = (Element) xNode;
-
-                    //Extract elements of node
-                    int startID = Integer.parseInt(element.getElementsByTagName("StartID").item(0).getTextContent());
-                    int endID =  Integer.parseInt(element.getElementsByTagName("EndID").item(0).getTextContent());
-                    if(edgeMap.get(startID)==null) {
-                        edgeMap.put(startID, new ArrayList<Integer>());
-                    }
-                    if (!edgeMap.get(startID).contains(endID)) {
-                        //Store the extracted Edge
-                        editor.model.Node startNode = NodeMap.get(startID);
-                        editor.model.Node endNode = NodeMap.get(endID);
-
-                        edges.add(new editor.model.Edge(startNode, endNode));
-
-                        edgeMap.get(startID).add(endID);
-                    }
-                }
-            }
+            edgeMap = extractEdges(xnodeList, nodeMap, edges);
 
 
         } catch (ParserConfigurationException e) {
@@ -188,9 +146,38 @@ public class FileHandler {
         }
 
         //Returns the entries as an ArrayList
-        Pair pair = new Pair(new ArrayList<>(NodeMap.values()),edges);
+        Pair pair = new Pair(new ArrayList<>(nodeMap.values()),edges);
         return pair;
     }
+
+    private static HashMap<Integer, ArrayList<Integer>> extractEdges(NodeList xnodeList, HashMap<Integer, editor.model.Node> nodeMap, ArrayList<Edge> edges) {
+        HashMap<Integer,ArrayList<Integer>> edgeMap = new HashMap<>(); //HashMap used for easy fix of duplicate edges.
+        for(int i = 0; i < xnodeList.getLength(); i++){
+            Node xNode = xnodeList.item(i);
+
+            if (xNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) xNode;
+
+                //Extract elements of node
+                int startID = Integer.parseInt(element.getElementsByTagName("StartID").item(0).getTextContent());
+                int endID =  Integer.parseInt(element.getElementsByTagName("EndID").item(0).getTextContent());
+                if(edgeMap.get(startID)==null) {
+                    edgeMap.put(startID, new ArrayList<Integer>());
+                }
+                if (!edgeMap.get(startID).contains(endID)) {
+                    //Store the extracted Edge
+                    editor.model.Node startNode = nodeMap.get(startID);
+                    editor.model.Node endNode = nodeMap.get(endID);
+
+                    edges.add(new editor.model.Edge(startNode, endNode));
+
+                    edgeMap.get(startID).add(endID);
+                }
+            }
+        }
+        return edgeMap;
+    }
+
     public static String[] LoadTags(String path) {
         String[] tags = null;
         try {
@@ -278,6 +265,124 @@ public class FileHandler {
             }
         }
         catch (Exception e){e.printStackTrace();}
+    }
+
+    public static ArrayList<Pair<ArrayList<editor.model.Node>, ArrayList<Edge>>> LoadTranslations(File file) {
+        ArrayList<Pair<ArrayList<editor.model.Node>, ArrayList<Edge>>> translations = new ArrayList<>();
+        try {
+
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+            Document doc = documentBuilder.parse(file);
+            doc.getDocumentElement().normalize(); //normalizes document
+
+
+            ArrayList<NodeList> translationNodes = extractTranslations(doc);
+            //foreach translation
+            for (NodeList list : translationNodes) {
+                //insert into translations
+                HashMap<Integer,editor.model.Node> nodeMap = new HashMap<>();
+                ArrayList<Edge> edges = new ArrayList<>();
+
+
+                NodeList xnodeList = ((Element) list).getElementsByTagName("Node"); //grab all "Node" from matchingPattern
+                nodeMap = extractNodes(xnodeList);
+
+                //Defines all edges...
+                HashMap<Integer,ArrayList<Integer>> edgeMap = new HashMap<>(); //HashMap used for easy fix of duplicate edges.
+                xnodeList = ((Element) list).getElementsByTagName("Edge");//grab all "Edge" from XML-file
+                edgeMap = extractEdges(xnodeList, nodeMap, edges);
+
+                Pair pair = new Pair(new ArrayList<>(nodeMap.values()),edges);
+                translations.add(pair);
+            }
+        } catch (ParserConfigurationException e) {
+            System.out.println("ParserConfigurationException: ");
+            e.printStackTrace();
+        } catch (SAXException e) {
+            System.out.println("SAXException: ");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("IOException: ");
+            e.printStackTrace();
+        }
+        return translations;
+    }
+
+    private static ArrayList<NodeList> extractTranslations(Document doc) {
+        ArrayList<NodeList> nodeListList = new ArrayList<NodeList>();
+        Element posTrans = (Element) doc.getElementsByTagName("PossibleTranslations").item(0);
+        NodeList patterns = posTrans.getElementsByTagName("Pattern");
+        for (int i = 0; i < patterns.getLength(); i++) {
+            nodeListList.add((NodeList) patterns.item(i));
+        }
+        return nodeListList;
+    }
+
+    public static Pair<ArrayList<editor.model.Node>, ArrayList<Edge>> LoadMatchingPattern(File file) {
+        HashMap<Integer,editor.model.Node> nodeMap = new HashMap<>();
+        ArrayList<Edge> edges = new ArrayList<>();
+
+        try {
+
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+
+            Document doc = documentBuilder.parse(file);
+            doc.getDocumentElement().normalize(); //normalizes document
+
+
+            //Defines all nodes...
+            Node pattern = doc.getElementsByTagName("MatchingPattern").item(0);
+            NodeList xnodeList = ((Element) pattern).getElementsByTagName("Node"); //grab all "Node" from matchingPattern
+            nodeMap = extractNodes(xnodeList);
+
+
+
+
+            //Defines all edges...
+            HashMap<Integer,ArrayList<Integer>> edgeMap = new HashMap<>(); //HashMap used for easy fix of duplicate edges.
+            xnodeList = ((Element) pattern).getElementsByTagName("Edge");//grab all "Edge" from XML-file
+            edgeMap = extractEdges(xnodeList, nodeMap, edges);
+
+
+        } catch (ParserConfigurationException e) {
+            System.out.println("ParserConfigurationException: ");
+            e.printStackTrace();
+        } catch (SAXException e) {
+            System.out.println("SAXException: ");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("IOException: ");
+            e.printStackTrace();
+        }
+
+        //Returns the entries as an ArrayList
+        Pair pair = new Pair(new ArrayList<>(nodeMap.values()),edges);
+        return pair;
+    }
+
+    private static HashMap<Integer, editor.model.Node> extractNodes(NodeList xnodeList) {
+        HashMap<Integer,editor.model.Node> nodeMap = new HashMap<>();
+        for(int i = 0; i < xnodeList.getLength(); i++){
+            Node xNode = xnodeList.item(i);
+
+
+
+            if (xNode.getNodeType() == Node.ELEMENT_NODE) {
+                Element element = (Element) xNode;
+
+                //Extract elements of node
+                int id = Integer.parseInt(element.getElementsByTagName("ID").item(0).getTextContent());
+                editor.model.Node.NodeType type = editor.model.Node.NodeType.valueOf(element.getElementsByTagName("Tag").item(0).getTextContent());
+                double x = Double.parseDouble(element.getElementsByTagName("X").item(0).getTextContent());
+                double y = Double.parseDouble(element.getElementsByTagName("Y").item(0).getTextContent());
+                //Store the extracted Node
+
+                editor.model.Node node = new editor.model.Node(id,x,y, editor.model.Node.DEFAULT_RADIUS, Color.RED,type);
+                nodeMap.put(id,node);
+            }
+        }
+        return nodeMap;
     }
 }
 

@@ -82,7 +82,7 @@ public class Controller {
     private MenuItem save_button;
 
     @FXML
-    private MenuItem load_button;
+    private MenuItem load_level_button;
 
     @FXML
     private MenuItem rule_menu_item;
@@ -146,7 +146,7 @@ public class Controller {
         room_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.ROOM));
         // init top menu
         save_button.setOnAction(actionEvent -> PrepareSave());
-        load_button.setOnAction(actionEvent -> PrepareLoad());
+        load_level_button.setOnAction(actionEvent -> PrepareLoadLevel());
         rule_menu_item.setOnAction(actionEvent -> showRules());
         level_menu_item.setOnAction(actionEvent -> showLevel());
         close_button.setOnAction(actionEvent -> Platform.exit());
@@ -204,13 +204,13 @@ public class Controller {
     /**
      * Loads file and appends elements to canvas
      */
-    private void PrepareLoad() {
+    private void PrepareLoadLevel() {
         File file;
         Stage stage;
 
         fileChooser.setTitle("Explorer");
         stage = (Stage) window.getScene().getWindow();
-        fileChooser.setInitialDirectory(new File("saves"));
+        fileChooser.setInitialDirectory(new File("."));
         file = fileChooser.showOpenDialog(stage);
 
         //No file selected, don't do anything

@@ -104,4 +104,9 @@ public class Edge extends QuadCurve{
         getStartNode().removeEdge(this);
         getEndNode().removeEdge(this);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode() + startNode.hashCode()*3+endNode.hashCode()*5;
+    }
 }

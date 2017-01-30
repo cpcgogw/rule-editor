@@ -10,4 +10,22 @@ public class Pattern {
     public Pattern(){
         nodes = new ArrayList<Node>();
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode()+nodes.hashCode()*3;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o.hashCode() == this.hashCode()){
+            if(o instanceof Pattern){
+                Pattern tmp = (Pattern) o;
+                return super.equals(tmp) && nodes.equals(tmp.nodes); // maybe sort lists
+            }else{
+                return false;
+            }
+        }else {
+            return false;
+        }    }
 }

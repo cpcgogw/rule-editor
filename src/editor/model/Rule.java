@@ -123,4 +123,29 @@ public class Rule {
 
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o.hashCode() == this.hashCode()){
+            if(o instanceof Rule){
+                Rule tmp = (Rule) o;
+                return super.equals(tmp)
+                        && tmp.matchingPattern.equals(this.matchingPattern)
+                        && tmp.possibleTranslations.equals(this.possibleTranslations); // maybe sort the lists.
+            }else{
+                return false;
+            }
+
+        }else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        int code = 0;
+        code += matchingPattern.hashCode()*3;
+        code += possibleTranslations.hashCode()*5;
+        return super.hashCode() + code;
+    }
 }

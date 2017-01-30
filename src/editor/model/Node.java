@@ -84,4 +84,23 @@ public class Node extends Circle {
     public void removeEdge(Edge edge) {
         edges.remove(edge);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode()+id*5+type.hashCode()*7;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if(o.hashCode() == this.hashCode()){
+            if(o instanceof Node){
+                Node tmp = (Node) o;
+                return super.equals(tmp) && tmp.getType().equals(this.type) && tmp.id == this.id;
+            }else{
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
 }

@@ -5,39 +5,39 @@ import editor.model.Node;
 import editor.model.Pattern;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
 /**
  * Created by vilddjur on 1/30/17.
  */
-class SaveTest {
+public class SaveAndLoadTest {
     private static final int NUM_OF_NODES_IN_PATTERN = 7;
     private static final List<Node.NodeType> TYPES =
             Collections.unmodifiableList(Arrays.asList(Node.NodeType.values()));
     private static final int NUM_OF_EDGES_IN_PATTERN = 10;
     private Random random;
 
-    @BeforeAll
-    void init(){
+    @Before
+    public void init(){
         random = new Random();
     }
     @Test
-    void saveRule() {
+    public void saveRule() {
 
     }
     @Test
-    void saveLevel() {
+    public void saveLevel() {
         //create pattern
         Pattern pattern = new Pattern();
         pattern.nodes.addAll(generateNodes());
         //save pattern
-        String path = "test/saveLevelTest.xml";
+        String path = "saveLevelTest.xml";
         FileHandler.SaveNodes(pattern.nodes, path);
         //load pattern
         Pattern pattern2 = new Pattern();
@@ -46,7 +46,7 @@ class SaveTest {
         nodes = pair.getKey();
         pattern2.nodes.addAll(nodes);
         //check that they are the same
-        assertEquals(pattern, pattern2);
+        assert(pattern.equals(pattern2));
     }
 
     private ArrayList<Node> generateNodes() {

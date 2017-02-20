@@ -1,6 +1,7 @@
 package editor.model;
 
 
+import javafx.util.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -12,6 +13,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by vilddjur on 1/28/17.
@@ -19,9 +21,21 @@ import java.util.ArrayList;
 public class Rule {
     public Pattern matchingPattern;
     public ArrayList<Pattern> possibleTranslations;
+    private Random rand;
     public Rule(Pattern matchingPattern){
+        rand = new Random();
         this.matchingPattern = matchingPattern;
         possibleTranslations = new ArrayList<Pattern>();
+    }
+
+    public Rule(Pattern match, ArrayList<Pair<ArrayList<Node>, ArrayList<Edge>>> translations) {
+        this.matchingPattern = match;
+        possibleTranslations = new ArrayList<Pattern>();
+        rand = new Random();
+        for (Pair<ArrayList<Node>, ArrayList<Edge>> pair : translations) {
+            Pattern p = new Pattern(pair);
+            possibleTranslations.add(p);
+        }
     }
 
     public void save(String path){
@@ -147,5 +161,19 @@ public class Rule {
         code += matchingPattern.hashCode()*3;
         code += possibleTranslations.hashCode()*5;
         return super.hashCode() + code;
+    }
+
+    public Pattern matchAndReplace(Pattern p) {
+        if(p.equals(matchingPattern)){
+            p = randomPossiblePattern();
+        }
+        return p;
+    }
+    public boolean matches(Pattern p){
+        return p.equals(matchingPattern);
+    }
+
+    private Pattern randomPossiblePattern() {
+        return possibleTranslations.get(rand.nextInt(possibleTranslations.size()));
     }
 }

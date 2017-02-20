@@ -78,6 +78,7 @@
                   <Button fx:id="move_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Move" />
                   <Button fx:id="delete_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Delete" />
                   <Button fx:id="new_scenario_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="129.0" text="New Scenario" />
+                  <Button fx:id="gen_button" mnemonicParsing="false" text="Generate level" />
                </children>
             </VBox>
          </content>

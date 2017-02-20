@@ -105,8 +105,10 @@ public class Edge extends QuadCurve{
         getEndNode().removeEdge(this);
     }
 
-    @Override
-    public int hashCode() {
-        return super.hashCode() + startNode.hashCode()*3+endNode.hashCode()*5;
-    }
+   /* @Override
+    public boolean equals(Object o) {
+
+
+
+    }*/
 }

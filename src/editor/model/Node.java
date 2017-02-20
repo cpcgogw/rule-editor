@@ -14,6 +14,14 @@ public class Node extends Circle {
     private static int idCounter=0;
     public static final int DEFAULT_RADIUS = 40;
 
+    public Node(Node n) {
+        super(n.getCenterX(), n.getCenterY(), n.getRadius(), n.getFill());
+        edges = new ArrayList<>();
+        id = n.id;
+        this.type = n.getType();
+        setColor();
+    }
+
 
     public enum NodeType{
         START, END, LOCK, KEY, ROOM
@@ -92,15 +100,22 @@ public class Node extends Circle {
 
     @Override
     public boolean equals(Object o) {
-        if(o.hashCode() == this.hashCode()){
-            if(o instanceof Node){
-                Node tmp = (Node) o;
-                return super.equals(tmp) && tmp.getType().equals(this.type) && tmp.id == this.id;
-            }else{
-                return false;
-            }
-        }else {
+        if(o instanceof Node){
+            Node tmp = (Node) o;
+            return tmp.getType().equals(this.type) /*&& this.getEdges().equals(tmp.edges) /*&& tmp.id == this.id*/;
+        }else{
             return false;
         }
+    }
+    public Node clone(){
+        Node node = new Node(this.getCenterX(), this.getCenterY(), (int)this.getRadius(), Color.AQUA, this.getType());
+        for (Edge e: this.edges){
+            if(e.getStartNode().getID() == this.id)
+                e.setStartNode(node);
+            if(e.getEndNode().getID() == this.id)
+                e.setEndNode(node);
+            node.edges.add(e);
+        }
+        return node;
     }
 }

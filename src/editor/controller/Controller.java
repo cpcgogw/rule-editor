@@ -45,9 +45,8 @@ public class Controller {
     private Button delete_button;
     @FXML
     private Button move_button;
-
     @FXML
-    private VBox node_types_box;
+    private Button gen_button;
 
     @FXML
     private Button start_node_button;
@@ -100,7 +99,7 @@ public class Controller {
 
     private HashMap<Pane, Pattern> scenarios;
     private Pattern matchingPattern;
-
+    private Pattern currentLevel;
     public tools getActiveTool() {
         return activeTool;
     }
@@ -135,6 +134,7 @@ public class Controller {
         activeType = NodeType.START;
         activeTool = NODE;
         activeCanvas = rule_canvas;
+        currentLevel = new Pattern();
 
         edge_button.setOnMouseClicked(mouseEvent -> activeTool = EDGE);
         // init editing buttons
@@ -158,17 +158,62 @@ public class Controller {
         canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent, canvas));
         canvas.setOnMouseEntered(event -> requestFocus(canvas));
 
+        gen_button.setOnMouseClicked(event -> generateLevel());
+
         //init rule canvas
         rule_canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent, rule_canvas));
         rule_canvas.setOnMouseEntered(mouseEvent -> requestFocus(rule_canvas));
         new_scenario_button.setOnMouseClicked(mouseEvent -> addTab("new tab"));
         nodeController = new NodeController();
 
-        new_button.setOnAction(actionEvent -> {nodeController.clear(); canvas.getChildren().clear();});
+        new_button.setOnAction(actionEvent -> {nodeController.clear(); canvas.getChildren().clear(); currentLevel = new Pattern();});
 
         // initialize currentRule;
         matchingPattern = new Pattern();
         activeRule = new Rule(matchingPattern);
+    }
+
+
+    /**
+     * Generates a level based of current level canvas content and displays it in the level canvas
+     * looks for scenarios/rules in ./saves/rules
+     */
+    private void generateLevel() {
+        File folder = new File("saves/rules");
+        ArrayList<Rule> rules = new ArrayList<>();
+        //load list of rules
+        for (File f : folder.listFiles()) {
+            if(!f.isDirectory()){
+                Pattern match = new Pattern(FileHandler.LoadMatchingPattern(f));
+                rules.add(new Rule(match, FileHandler.LoadTranslations(f)));
+            }
+        }
+        //match to current level
+        Pattern newLevel = translateLevel(currentLevel, rules);
+        //display
+        currentLevel = newLevel;
+        canvas.getChildren().clear();
+        for(Node n : newLevel.nodes){
+            Node node = n.clone();
+            nodeController.addNode(node);
+            canvas.getChildren().add(node);
+            for(Edge e : node.getEdges()){
+                Edge c = nodeController.getEdgeController().addEdge(e);
+                if(!canvas.getChildren().contains(c)){
+                    canvas.getChildren().add(c.getArrow());
+                    canvas.getChildren().add(c);
+                }
+            }
+        }
+        System.out.println("Dumping generated level: \n Level: ");
+        for (Node n : newLevel.nodes) {
+            System.out.println("  node: " + n.getType().toString());
+        }
+    }
+
+    private Pattern translateLevel(Pattern pattern, ArrayList<Rule> rules) {
+        pattern.findAndReplace(rules);
+        return pattern;
     }
 
     private void showRules() {
@@ -228,10 +273,10 @@ public class Controller {
 
 
         Pair<ArrayList<Node>,ArrayList<Edge>> pair = FileHandler.LoadMatchingPattern(file);
+        ArrayList<Pair<ArrayList<Node>,ArrayList<Edge>>> translations = FileHandler.LoadTranslations(file);
         activeCanvas = rule_canvas;
         insertIntoCanvasAndList(rule_canvas, matchingPattern.nodes, pair);
 
-        ArrayList<Pair<ArrayList<Node>,ArrayList<Edge>>> translations = FileHandler.LoadTranslations(file);
         for (Pair<ArrayList<Node>, ArrayList<Edge>> p : translations){
 
             Pair<Pane, Pattern> panePatternPair = addTab("saved tab");
@@ -305,7 +350,9 @@ public class Controller {
             c.getChildren().add(node);
             if(c == rule_canvas){
                 matchingPattern.nodes.add(node);
-            }else if(c != canvas){
+            }else if(c == canvas){
+                currentLevel.nodes.add(node);
+            } else {
                 scenarios.get(c).nodes.add(node);
             }
         }

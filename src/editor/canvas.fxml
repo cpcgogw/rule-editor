@@ -5,6 +5,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -15,24 +16,48 @@
 
 <AnchorPane fx:id="window" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="editor.controller.Controller">
    <children>
-      <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="29.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="200.0">
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="27.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <VBox fx:id="node_types_box" prefHeight="771.0" prefWidth="100.0">
-                     <children>
-                        <Button fx:id="start_node_button" mnemonicParsing="false" prefHeight="93.0" prefWidth="100.0" style="-fx-background-color: #00BFFF;" text="StartNode" />
-                        <Button fx:id="end_node_button" mnemonicParsing="false" prefHeight="89.0" prefWidth="100.0" style="-fx-background-color: #228B22;" text="EndNode" />
-                        <Button fx:id="key_node_button" mnemonicParsing="false" prefHeight="93.0" prefWidth="100.0" style="-fx-background-color: #FFA500;" text="KeyNode" />
-                        <Button fx:id="lock_node_button" mnemonicParsing="false" prefHeight="95.0" prefWidth="100.0" style="-fx-background-color: #FF0000;" text="LockNode" />
-                        <Button fx:id="room_node_button" mnemonicParsing="false" prefHeight="98.0" prefWidth="100.0" style="-fx-background-color: #FFC0CB;" text="RoomNode" />
-                        <Button fx:id="edge_button" mnemonicParsing="false" prefHeight="98.0" prefWidth="100.0" style="-fx-background-color: #ABCDEF;" text="Edge" />
-                     </children>
-                  </VBox>
+                  <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="200.0">
+                           <children>
+                              <VBox fx:id="node_types_box" prefHeight="771.0" prefWidth="100.0">
+                                 <children>
+                                    <Button fx:id="start_node_button" mnemonicParsing="false" prefHeight="93.0" prefWidth="100.0" style="-fx-background-color: #00BFFF;" text="StartNode" />
+                                    <Button fx:id="end_node_button" mnemonicParsing="false" prefHeight="89.0" prefWidth="100.0" style="-fx-background-color: #228B22;" text="EndNode" />
+                                    <Button fx:id="key_node_button" mnemonicParsing="false" prefHeight="93.0" prefWidth="100.0" style="-fx-background-color: #FFA500;" text="KeyNode" />
+                                    <Button fx:id="lock_node_button" mnemonicParsing="false" prefHeight="95.0" prefWidth="100.0" style="-fx-background-color: #FF0000;" text="LockNode" />
+                                    <Button fx:id="room_node_button" mnemonicParsing="false" prefHeight="98.0" prefWidth="100.0" style="-fx-background-color: #FFC0CB;" text="RoomNode" />
+                                    <Button fx:id="edge_button" mnemonicParsing="false" prefHeight="98.0" prefWidth="100.0" style="-fx-background-color: #ABCDEF;" text="Edge" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </ScrollPane>
                </children>
             </AnchorPane>
-        </content>
-      </ScrollPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <ScrollPane prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                        <VBox prefHeight="255.0" prefWidth="197.0">
+                           <children>
+                              <Button fx:id="move_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Move" />
+                              <Button fx:id="delete_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Delete" />
+                              <Button fx:id="new_scenario_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="129.0" text="New Scenario" />
+                              <Button fx:id="gen_button" mnemonicParsing="false" text="Generate level" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
       <Pane fx:id="canvas" minHeight="593.0" minWidth="1200.0" prefHeight="800.0" prefWidth="712.0" style="-fx-background-color: #EFE;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0" />
        <GridPane fx:id="rule_pane" layoutX="200.0" layoutY="29.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="29.0">
            <columnConstraints>
@@ -71,17 +96,5 @@
           </Menu>
         </menus>
       </MenuBar>
-      <ScrollPane layoutX="-3.0" layoutY="615.0" prefHeight="400.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0">
-         <content>
-            <VBox prefHeight="255.0" prefWidth="197.0">
-               <children>
-                  <Button fx:id="move_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Move" />
-                  <Button fx:id="delete_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Delete" />
-                  <Button fx:id="new_scenario_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="129.0" text="New Scenario" />
-                  <Button fx:id="gen_button" mnemonicParsing="false" text="Generate level" />
-               </children>
-            </VBox>
-         </content>
-      </ScrollPane>
    </children>
 </AnchorPane>

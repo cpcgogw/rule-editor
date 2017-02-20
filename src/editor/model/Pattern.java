@@ -3,8 +3,6 @@ package editor.model;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Created by vilddjur on 1/28/17.
@@ -44,12 +42,12 @@ public class Pattern {
                     System.out.println("checking subpattern:");
                     for (Node n :
                             subPattern.nodes) {
-                        System.out.println(" Type: " + n.getType() + ", id:" + n.getID());
+                        System.out.println(" Type: " + n.getType() + ", id:" + n.getNodeId());
                     }
                     System.out.println("vs: ");
                     for (Node n :
                             r.matchingPattern.nodes) {
-                        System.out.println(" Type: " + n.getType() + ", id:" + n.getID());
+                        System.out.println(" Type: " + n.getType() + ", id:" + n.getNodeId());
                     }
                     if(r.matches(subPattern)){
                         Pattern p = r.matchAndReplace(subPattern);

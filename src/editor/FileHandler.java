@@ -17,7 +17,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javax.swing.*;
 
 /**
  * This is to save and/or store nodes & edges
@@ -50,7 +49,7 @@ public class FileHandler {
                 elemNodes.appendChild(elemNode);
 
                 Element elemId = doc.createElement("ID");
-                elemId.appendChild(doc.createTextNode(String.valueOf(node.getID())));
+                elemId.appendChild(doc.createTextNode(String.valueOf(node.getNodeId())));
                 elemNode.appendChild(elemId);
 
                 Element elemTag = doc.createElement("Tag");
@@ -72,11 +71,11 @@ public class FileHandler {
                     elemEdges.appendChild(elemEdge);
 
                     Element elemStart = doc.createElement("StartID");
-                    elemStart.appendChild(doc.createTextNode(String.valueOf(edge.getStartNode().getID())));
+                    elemStart.appendChild(doc.createTextNode(String.valueOf(edge.getStartNode().getNodeId())));
                     elemEdge.appendChild(elemStart);
 
                     Element elemEnd = doc.createElement("EndID");
-                    elemEnd.appendChild(doc.createTextNode(String.valueOf(edge.getEndNode().getID())));
+                    elemEnd.appendChild(doc.createTextNode(String.valueOf(edge.getEndNode().getNodeId())));
                     elemEdge.appendChild(elemEnd);
                 }
             }

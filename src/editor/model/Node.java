@@ -22,6 +22,10 @@ public class Node extends Circle {
         setColor();
     }
 
+    public void setNodeId(int nodeId) {
+        this.id = nodeId;
+    }
+
 
     public enum NodeType{
         START, END, LOCK, KEY, ROOM
@@ -82,7 +86,7 @@ public class Node extends Circle {
         edges.add(e);
     }
 
-    public int getID() {
+    public int getNodeId() {
         return id;
     }
     public NodeType getType(){
@@ -110,9 +114,9 @@ public class Node extends Circle {
     public Node clone(){
         Node node = new Node(this.getCenterX(), this.getCenterY(), (int)this.getRadius(), Color.AQUA, this.getType());
         for (Edge e: this.edges){
-            if(e.getStartNode().getID() == this.id)
+            if(e.getStartNode().getNodeId() == this.id)
                 e.setStartNode(node);
-            if(e.getEndNode().getID() == this.id)
+            if(e.getEndNode().getNodeId() == this.id)
                 e.setEndNode(node);
             node.edges.add(e);
         }

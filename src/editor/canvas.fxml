@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -46,10 +48,11 @@
                      <content>
                         <VBox prefHeight="255.0" prefWidth="197.0">
                            <children>
-                              <Button fx:id="move_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="53.0" text="Move" />
-                              <Button fx:id="delete_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="63.0" text="Delete" />
-                              <Button fx:id="new_scenario_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="129.0" text="New Scenario" />
-                              <Button fx:id="gen_button" mnemonicParsing="false" text="Generate level" />
+                              <Button fx:id="move_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="156.0" text="Move" />
+                              <Button fx:id="delete_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="156.0" text="Delete" />
+                              <Button fx:id="select_node_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="156.0" text="Select" />
+                              <Button fx:id="new_scenario_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="155.0" text="New Scenario" />
+                              <Button fx:id="gen_button" mnemonicParsing="false" prefHeight="26.0" prefWidth="155.0" text="Generate level" />
                            </children>
                         </VBox>
                      </content>
@@ -63,6 +66,7 @@
            <columnConstraints>
                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
            </columnConstraints>
            <rowConstraints>
                <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
@@ -70,6 +74,13 @@
            <children>
                <TabPane fx:id="rule_tab_pane" prefHeight="671.0" prefWidth="762.0" tabClosingPolicy="UNAVAILABLE" GridPane.columnIndex="1" />
                <Pane fx:id="rule_canvas" prefHeight="671.0" prefWidth="437.0" style="-fx-background-color: #EFA;" />
+            <Pane fx:id="node_inspector_pane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #EFA;" GridPane.columnIndex="2">
+               <children>
+                  <TextField fx:id="active_node_id_field" layoutX="14.0" layoutY="91.0" prefHeight="26.0" prefWidth="160.0" />
+                  <Button fx:id="active_node_save_button" layoutX="117.0" layoutY="127.0" mnemonicParsing="false" text="Button" />
+                  <Label layoutX="14.0" layoutY="75.0" text="ID" />
+               </children>
+            </Pane>
            </children>
        </GridPane>
       <MenuBar prefHeight="29.0" prefWidth="1306.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

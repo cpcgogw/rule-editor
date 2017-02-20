@@ -19,15 +19,17 @@ public class NodeController {
 
     private Edge currentEdge;
     private EdgeController edgeController;
+    private Controller controller;
     private boolean dragging;
     private ArrayList<Node> nodes;
 
     /**
      *
      */
-    public NodeController(){
+    public NodeController(Controller controller){
         currentEdge = null;
         dragging = false;
+        this.controller = controller;
         this.edgeController = new EdgeController();
         this.nodes = new ArrayList<Node>();
     }
@@ -56,6 +58,8 @@ public class NodeController {
             }
         }else if(Controller.activeTool == MOVE){
             dragging = true;
+        }else if(Controller.activeTool == SELECT){
+            controller.setActiveNode(c);
         }
     }
     public Node addNode(Node c) {

@@ -7,15 +7,11 @@ import editor.model.Rule;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import editor.model.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
 import static editor.controller.Controller.tools.*;
@@ -45,6 +41,8 @@ public class Controller {
     private Button delete_button;
     @FXML
     private Button move_button;
+    @FXML
+    private Button select_node_button;
     @FXML
     private Button gen_button;
 
@@ -97,9 +95,27 @@ public class Controller {
     @FXML
     private MenuItem level_menu_item;
 
+    /**
+     * inspector pane
+     */
+    @FXML
+    public static Pane node_inspector_pane;
+    @FXML
+    public TextField active_node_id_field;
+    @FXML
+    private Button active_node_save_button;
+    public  Node activeNode;
+
     private HashMap<Pane, Pattern> scenarios;
     private Pattern matchingPattern;
     private Pattern currentLevel;
+
+    public void setActiveNode(Node activeNode) {
+        this.activeNode = activeNode;
+        active_node_id_field.setText(String.valueOf(activeNode.getNodeId()));
+    }
+
+
     public tools getActiveTool() {
         return activeTool;
     }
@@ -120,7 +136,7 @@ public class Controller {
      * Enum to keep track of which tool is active
      */
     public enum tools {
-        EDGE, NODE, DELETE, MOVE
+        EDGE, NODE, DELETE, MOVE, SELECT
     }
     private FileChooser fileChooser = new FileChooser();
     public static tools activeTool;
@@ -140,6 +156,7 @@ public class Controller {
         // init editing buttons
         delete_button.setOnMouseClicked(mouseEvent -> activeTool = DELETE);
         move_button.setOnMouseClicked(mouseEvent -> activeTool = MOVE);
+        select_node_button.setOnMouseClicked(mouseEvent -> activeTool = SELECT);
         // init node buttons
         start_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.START));
         end_node_button.setOnMouseClicked(mouseEvent -> activateType(NodeType.END));
@@ -164,13 +181,20 @@ public class Controller {
         rule_canvas.setOnMouseClicked(mouseEvent -> handlePress(mouseEvent, rule_canvas));
         rule_canvas.setOnMouseEntered(mouseEvent -> requestFocus(rule_canvas));
         new_scenario_button.setOnMouseClicked(mouseEvent -> addTab("new tab"));
-        nodeController = new NodeController();
+        nodeController = new NodeController(this);
+
+        // init inspector pane
+        active_node_save_button.setOnMouseClicked(mouseEvent -> saveActiveNode());
 
         new_button.setOnAction(actionEvent -> {nodeController.clear(); canvas.getChildren().clear(); currentLevel = new Pattern();});
 
         // initialize currentRule;
         matchingPattern = new Pattern();
         activeRule = new Rule(matchingPattern);
+    }
+
+    private void saveActiveNode() {
+        activeNode.setNodeId(Integer.parseInt(active_node_id_field.getText()));
     }
 
 

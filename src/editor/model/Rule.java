@@ -178,6 +178,7 @@ public class Rule {
                     e.replaceNode(n, node);
                 }
                 node.setEdges(n.getEdges());
+                node.setType(n.getType());
                 node.setNodeId(n.getNodeId());
             }
         }

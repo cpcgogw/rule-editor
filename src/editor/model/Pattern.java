@@ -3,18 +3,22 @@ package editor.model;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  * Created by vilddjur on 1/28/17.
  */
 public class Pattern {
     public ArrayList<Node> nodes;
+    private Random random;
     public Pattern(){
         nodes = new ArrayList<Node>();
+        random = new Random();
     }
     public Pattern(Pair<ArrayList<Node>,ArrayList<Edge>> pair){
         nodes = new ArrayList<>();
         nodes.addAll(pair.getKey());
+        random = new Random();
     }
     @Override
     public int hashCode() {
@@ -33,6 +37,7 @@ public class Pattern {
 
     public void findAndReplace(ArrayList<Rule> rules) {
         this.resetIds();
+        ArrayList<Pair<Rule, Pattern>> rulePatternList = new ArrayList<>();
         for (Rule r : rules) {
             for (int i = 0; i < nodes.size(); i++) {
                 if(Rule.DEBUG_MODE) {
@@ -47,8 +52,7 @@ public class Pattern {
                 Pattern p = new Pattern();
                 boolean result = r.nodeContainsSubPattern(nodes.get(i), new ArrayList<Node>(), p);
                 if(result){
-                    r.replace(p);
-                    r.addAllNotIn(this, p);
+                    rulePatternList.add(new Pair<>(r,p));
                 }
                 if(Rule.DEBUG_MODE) {
                     System.out.println(result);
@@ -58,10 +62,13 @@ public class Pattern {
                         System.out.println(" Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size());
                     }
                 }
-                 if(result)
-                     return;
             }
         }
+        Pair<Rule,Pattern> pair = rulePatternList.get(random.nextInt(rulePatternList.size()));
+        Rule r = pair.getKey();
+        Pattern p = pair.getValue();
+        r.replace(p);
+        r.addAllNotIn(this, p);
     }
 
     public void resetIds() {

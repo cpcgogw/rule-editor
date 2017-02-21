@@ -50,6 +50,11 @@ public class Node extends Circle {
         this.edges = edges;
     }
 
+    public void setType(NodeType type) {
+        this.type = type;
+        setColor();
+    }
+
 
     public enum NodeType{
         START, END, LOCK, KEY, ROOM

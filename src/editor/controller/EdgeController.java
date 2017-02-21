@@ -26,8 +26,6 @@ public class EdgeController {
 
         e.setOnMouseDragged(event -> {
                 if(dragging){
-                    e.setControlX(event.getX());
-                    e.setControlY(event.getY());
                     e.makeArrow();
                 }
         });
@@ -52,8 +50,6 @@ public class EdgeController {
 
         e.setOnMouseDragged(event -> {
             if(dragging){
-                e.setControlX(event.getX());
-                e.setControlY(event.getY());
                 e.makeArrow();
             }
         });

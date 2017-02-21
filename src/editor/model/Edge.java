@@ -9,7 +9,7 @@ import static editor.model.Node.DEFAULT_RADIUS;
 /**
  * Created by vilddjur on 1/24/17.
  */
-public class Edge extends QuadCurve{
+public class Edge extends Line{
     private Node startNode;
     private Node endNode;
     private Path arrowHead;
@@ -57,13 +57,12 @@ public class Edge extends QuadCurve{
         this.endNode = endNode;
         this.endNode.addEdge(this);
 
-        setBend();
         return makeArrow();
     }
 
     public Shape makeArrow() {
-        double deltaY = (getControlY() - endNode.getCenterY());
-        double deltaX = (getControlX() - endNode.getCenterX());
+        double deltaY = (startNode.getCenterY() - endNode.getCenterY());
+        double deltaX = (startNode.getCenterX() - endNode.getCenterX());
         double angle = Math.atan2(deltaY,deltaX);
         double x = endNode.getCenterX() + Math.cos(angle)*DEFAULT_RADIUS;
         double y = endNode.getCenterY() + Math.sin(angle)*DEFAULT_RADIUS;
@@ -73,11 +72,6 @@ public class Edge extends QuadCurve{
         arrowHead.getElements().add(new LineTo(x + Math.cos(angle+Math.toRadians(-45))*(DEFAULT_RADIUS/2),y + Math.sin(angle+Math.toRadians(-45))*(DEFAULT_RADIUS/2)));
         arrowHead.getElements().add(new LineTo(x,y));
         return arrowHead;
-    }
-
-    private void setBend() {
-        this.setControlX((Math.abs(getEndX()-getStartX())));
-        this.setControlY((Math.abs(getEndY()-getStartY())));
     }
 
     public Node getEndNode() {
@@ -93,7 +87,6 @@ public class Edge extends QuadCurve{
             this.setEndX(endNode.getCenterX());
             this.setEndY(endNode.getCenterY());
         }
-        setBend();
         makeArrow();
     }
     public Shape getArrow(){

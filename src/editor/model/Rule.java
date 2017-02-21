@@ -19,6 +19,7 @@ import java.util.Random;
  * Created by vilddjur on 1/28/17.
  */
 public class Rule {
+    public static final boolean DEBUG_MODE = true;
     public Pattern matchingPattern;
     public ArrayList<Pattern> possibleTranslations;
     private Random rand;
@@ -163,11 +164,150 @@ public class Rule {
         return super.hashCode() + code;
     }
 
-    public Pattern matchAndReplace(Pattern p) {
-        if(p.equals(matchingPattern)){
-            p = randomPossiblePattern();
+    public void replace(Pattern p) {
+        Pattern tr = randomPossiblePattern();
+        for (Node node : p.nodes) {
+            ArrayList<Edge> outsideEdges = node.extractOutgoingEdges(p);
+            Node n = findCorrespondingNode(node, tr);
+            if(n != null){
+                if(Rule.DEBUG_MODE)
+                    System.out.println("replace: found corresponding node; " + "Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size());
+                n.addAllEdges(outsideEdges);
+                for (Edge e :
+                        n.getEdges()) {
+                    e.replaceNode(n, node);
+                }
+                node.setEdges(n.getEdges());
+                node.setNodeId(n.getNodeId());
+            }
         }
-        return p;
+        addAllNotIn(p, tr);
+    }
+
+    /**
+     * adds all nodes in tr that are not in p,
+     * @param p
+     * pattern to add into
+     * @param tr
+     * pattern to take nodes from
+     */
+    public void addAllNotIn(Pattern p, Pattern tr) {
+        for (Node node :
+                tr.nodes) {
+            boolean contains = false;
+            for (Node n : p.nodes) {
+                if(n.getNodeId() == node.getNodeId()){
+                    contains = true;
+                }
+            }
+            if(!contains){
+                if(Rule.DEBUG_MODE)
+                    System.out.println("addAllNotIn: adding node; " + "Type: " + node.getType() + ", id:" + node.getNodeId() + ", #edges: " + node.getEdges().size());
+                p.nodes.add(node);
+            }
+        }
+    }
+
+    private Node findCorrespondingNode(Node node, Pattern p) {
+        Node ret = null;
+        for (Node n :
+                matchingPattern.nodes) {
+            if (node.getType() == n.getType()){
+                for (Node n2 : p.nodes) {
+                    if (n2.getNodeId() == n.getNodeId())
+                        return n2;
+                }
+            }
+        }
+        return ret;
+    }
+
+
+    public boolean nodeContainsSubPattern(Node node, ArrayList<Node> checkedNodes, Pattern p){
+        boolean returnBool = false;
+        if(checkedNodes.contains(node)){
+            return true;
+        }
+        for (Node n : matchingPattern.nodes) {
+            // find node in matching pattern with same type.
+            if(node.getType() == n.getType()) {
+                checkedNodes.add(node);
+                if(DEBUG_MODE)
+                    System.out.println("nodeContainsSubPattern: found matching type");
+                returnBool = true;
+                /**
+                 * all edges in node n must be in node "node"
+                 * also traverses the nodes to check
+                 */
+                returnBool = allEdgeAreContainedIn(n, node, checkedNodes, p);
+                if(returnBool){
+                    if(DEBUG_MODE)
+                        System.out.println("nodeContainsSubPattern: edges were correct, adding to pattern");
+                    p.nodes.add(node);
+                }
+            }
+            /**
+             * once we have found a node which has the correct edges we can check all the subnodes to that node.
+             * issue here is that we need to keep track of which nodes we have check in order to not have a circular dep.
+             */
+
+        }
+        return returnBool;
+    }
+    private boolean allEdgeAreContainedIn(Node n, Node node, ArrayList<Node> checkedNodes, Pattern p){
+        boolean returnBool = true;
+        boolean nooneChecked = true;
+        if(n.getEdges().size() > node.getEdges().size()){
+            if(DEBUG_MODE)
+                System.out.println("allEdgeAreContainedIn: given node had less edges than other given node");
+            return false;
+        }
+        for (Edge e : n.getEdges()) { // for each edge in node from matching pattern
+            for (Edge gE : node.getEdges()) { // for each edge in given node
+                if(e.getStartNode() == n){ // if n is start node then we check end node
+                    if(gE.getStartNode() == node){ // if node is start node in its edge
+                        nooneChecked = false;
+                        if(gE.getEndNode().getType() != e.getEndNode().getType()){
+                            /**
+                             * if they are not the same we need to continue to look, but we set flag to false to keep track
+                             */
+                            if(DEBUG_MODE)
+                                System.out.println("allEdgeAreContainedIn: found edge where end nodes were not the same");
+                            returnBool = false;
+                        }else{
+                            /**
+                             * if we find a matching node-edge pair we can set flag to true and check this subnode for subpattern.
+                             * finally we break loop
+                             */
+                            if(DEBUG_MODE)
+                                System.out.println("allEdgeAreContainedIn: found true case, checking subNode");
+                            returnBool = nodeContainsSubPattern(gE.getEndNode(), checkedNodes, p);
+                            break;
+                        }
+                    }
+                }else if(e.getEndNode() == n){
+                    if(gE.getEndNode() == node){
+                        nooneChecked = false;
+                        if(gE.getStartNode().getType() != e.getStartNode().getType()){
+                            if(DEBUG_MODE)
+                                System.out.println("allEdgeAreContainedIn: found edge where start nodes were not the same");
+                            returnBool = false;
+                        }else{
+                            if(DEBUG_MODE)
+                                System.out.println("allEdgeAreContainedIn: found true case, checking subNode");
+                            returnBool = nodeContainsSubPattern(gE.getStartNode(), checkedNodes, p);
+                            break;
+                        }
+                    }
+                }
+            }
+            if(nooneChecked){
+                return false;
+            }
+        }
+        if(DEBUG_MODE)
+            System.out.println("returning: " + returnBool);
+        return returnBool;
     }
     public boolean matches(Pattern p){
         return p.equals(matchingPattern);

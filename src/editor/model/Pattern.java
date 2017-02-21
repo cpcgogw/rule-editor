@@ -32,39 +32,42 @@ public class Pattern {
     }
 
     public void findAndReplace(ArrayList<Rule> rules) {
+        this.resetIds();
         for (Rule r : rules) {
             for (int i = 0; i < nodes.size(); i++) {
-                for (int j = i; j <= nodes.size(); j++) {
-                    Pattern subPattern = new Pattern();
-                    subPattern.nodes.addAll(nodes.subList(i,j));
-                    System.out.println(nodes.size());
-                    System.out.println(nodes.subList(i,j).size());
+                if(Rule.DEBUG_MODE) {
                     System.out.println("checking subpattern:");
-                    for (Node n :
-                            subPattern.nodes) {
-                        System.out.println(" Type: " + n.getType() + ", id:" + n.getNodeId());
-                    }
-                    System.out.println("vs: ");
+                    System.out.println(" Type: " + nodes.get(i).getType() + ", id:" + nodes.get(i).getNodeId() + ", #edges: " + nodes.get(i).getEdges().size());
+                    System.out.println("vs");
                     for (Node n :
                             r.matchingPattern.nodes) {
-                        System.out.println(" Type: " + n.getType() + ", id:" + n.getNodeId());
-                    }
-                    if(r.matches(subPattern)){
-                        Pattern p = r.matchAndReplace(subPattern);
-                        ArrayList<Node> tmp = new ArrayList<>();
-                        tmp.addAll(nodes.subList(0,i));
-                        tmp.addAll(p.nodes);
-                        tmp.addAll(nodes.subList(j,nodes.size()));
-                        this.nodes = tmp;
-                        System.out.println("adding nodes; " + p.nodes.size());
-                        i+=p.nodes.size();
-                        j+=p.nodes.size();
-                        if(i>nodes.size() || j>nodes.size()){
-                            break;
-                        }
+                        System.out.println(" Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size());
                     }
                 }
+                Pattern p = new Pattern();
+                boolean result = r.nodeContainsSubPattern(nodes.get(i), new ArrayList<Node>(), p);
+                if(result){
+                    r.replace(p);
+                    r.addAllNotIn(this, p);
+                }
+                if(Rule.DEBUG_MODE) {
+                    System.out.println(result);
+                    System.out.println("found: ");
+                    for (Node n :
+                            p.nodes) {
+                        System.out.println(" Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size());
+                    }
+                }
+                 if(result)
+                     return;
             }
+        }
+    }
+
+    public void resetIds() {
+        for (Node node :
+                nodes) {
+            node.setNodeId((node.getNodeId()+3)* 2);
         }
     }
 }

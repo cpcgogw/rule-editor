@@ -104,11 +104,11 @@ public class Edge extends QuadCurve{
         getStartNode().removeEdge(this);
         getEndNode().removeEdge(this);
     }
-
-   /* @Override
-    public boolean equals(Object o) {
-
-
-
-    }*/
+    public void replaceNode(Node replace, Node newNode){
+        if(startNode == replace){
+            startNode = newNode;
+        }else if(endNode == replace){
+            endNode = newNode;
+        }
+    }
 }

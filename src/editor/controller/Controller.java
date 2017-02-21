@@ -26,6 +26,7 @@ import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Controller {
     /**
@@ -212,26 +213,30 @@ public class Controller {
                 rules.add(new Rule(match, FileHandler.LoadTranslations(f)));
             }
         }
+        canvas.getChildren().clear();
         //match to current level
         Pattern newLevel = translateLevel(currentLevel, rules);
-        //display
-        currentLevel = newLevel;
-        canvas.getChildren().clear();
-        for(Node n : newLevel.nodes){
-            Node node = n.clone();
-            nodeController.addNode(node);
-            canvas.getChildren().add(node);
-            for(Edge e : node.getEdges()){
-                Edge c = nodeController.getEdgeController().addEdge(e);
-                if(!canvas.getChildren().contains(c)){
-                    canvas.getChildren().add(c.getArrow());
-                    canvas.getChildren().add(c);
-                }
+        if(Rule.DEBUG_MODE){
+            System.out.println("Dumping generated level: \n Level: ");
+            for (Node n : newLevel.nodes) {
+                System.out.println("  node: Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size());
             }
         }
-        System.out.println("Dumping generated level: \n Level: ");
-        for (Node n : newLevel.nodes) {
-            System.out.println("  node: " + n.getType().toString());
+        //display
+        currentLevel = newLevel;
+        newLevel.resetIds();
+        for(Node n : newLevel.nodes){
+            //Node node = n.clone();
+            nodeController.addNode(n);
+            canvas.getChildren().add(n);
+            for(Edge e : n.getEdges()){
+                Edge c = nodeController.getEdgeController().addEdge(e);
+                if(!canvas.getChildren().contains(c.getArrow()))
+                    canvas.getChildren().add(c.getArrow());
+                if(!canvas.getChildren().contains(c))
+                    canvas.getChildren().add(c);
+
+            }
         }
     }
 

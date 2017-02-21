@@ -26,6 +26,30 @@ public class Node extends Circle {
         this.id = nodeId;
     }
 
+    public void addAllEdges(ArrayList<Edge> edges) {
+        this.edges.addAll(edges);
+    }
+
+    public ArrayList<Edge> extractOutgoingEdges(Pattern p) {
+        ArrayList<Edge> outgoingEdges = new ArrayList<>();
+        for (Edge e : edges) {
+            if(this == e.getEndNode()){ // we are end node, check if start node is in given pattern
+                if(!p.nodes.contains(e.getStartNode())){
+                    outgoingEdges.add(e);
+                }
+            }else{ // we are start node, check if end node is in given pattern
+                if(!p.nodes.contains(e.getEndNode())){
+                    outgoingEdges.add(e);
+                }
+            }
+        }
+        return outgoingEdges;
+    }
+
+    public void setEdges(ArrayList<Edge> edges) {
+        this.edges = edges;
+    }
+
 
     public enum NodeType{
         START, END, LOCK, KEY, ROOM
@@ -102,15 +126,6 @@ public class Node extends Circle {
         return super.hashCode()+id*5+type.hashCode()*7;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if(o instanceof Node){
-            Node tmp = (Node) o;
-            return tmp.getType().equals(this.type) /*&& this.getEdges().equals(tmp.edges) /*&& tmp.id == this.id*/;
-        }else{
-            return false;
-        }
-    }
     public Node clone(){
         Node node = new Node(this.getCenterX(), this.getCenterY(), (int)this.getRadius(), Color.AQUA, this.getType());
         for (Edge e: this.edges){

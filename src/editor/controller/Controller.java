@@ -235,7 +235,7 @@ public class Controller {
                     canvas.getChildren().add(c.getArrow());
                 if(!canvas.getChildren().contains(c))
                     canvas.getChildren().add(c);
-
+                e.updateNodes();
             }
         }
     }

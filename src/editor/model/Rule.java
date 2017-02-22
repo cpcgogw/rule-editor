@@ -177,6 +177,8 @@ public class Rule {
                         n.getEdges()) {
                     e.replaceNode(n, node);
                 }
+                node.setCenterX(n.getCenterX());
+                node.setCenterY(n.getCenterY());
                 node.setEdges(n.getEdges());
                 node.setType(n.getType());
                 node.setNodeId(n.getNodeId());

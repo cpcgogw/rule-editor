@@ -2,7 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/rule-editor.iml" filepath="$PROJECT_DIR$/rule-editor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rule-editor.iml" filepath="$PROJECT_DIR$/.idea/modules/rule-editor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rule-editor_main.iml" filepath="$PROJECT_DIR$/.idea/modules/rule-editor_main.iml" group="rule-editor" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/rule-editor_test.iml" filepath="$PROJECT_DIR$/.idea/modules/rule-editor_test.iml" group="rule-editor" />
     </modules>
   </component>
 </project>

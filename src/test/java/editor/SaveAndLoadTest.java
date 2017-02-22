@@ -5,13 +5,11 @@ import editor.model.Node;
 import editor.model.Pattern;
 import javafx.scene.paint.Color;
 import javafx.util.Pair;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import java.io.File;
 import java.util.*;
 
-import static org.junit.Assert.*;
 
 /**
  * Created by vilddjur on 1/30/17.

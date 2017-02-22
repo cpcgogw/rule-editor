@@ -34,9 +34,14 @@ public class Pattern {
                 return false;
             }
     }
+    public void findAndReplaceNTimes(ArrayList<Rule> rules, int n){
+        for (int i = 0; i < n; i++) {
+            findAndReplace(rules);
+        }
+    }
 
     public void findAndReplace(ArrayList<Rule> rules) {
-        this.resetIds();
+
         ArrayList<Pair<Rule, Pattern>> rulePatternList = new ArrayList<>();
         for (Rule r : rules) {
             for (int i = 0; i < nodes.size(); i++) {
@@ -64,11 +69,14 @@ public class Pattern {
                 }
             }
         }
-        Pair<Rule,Pattern> pair = rulePatternList.get(random.nextInt(rulePatternList.size()));
-        Rule r = pair.getKey();
-        Pattern p = pair.getValue();
-        r.replace(p);
-        r.addAllNotIn(this, p);
+        if(rulePatternList.size()>0){
+            Pair<Rule,Pattern> pair = rulePatternList.get(random.nextInt(rulePatternList.size()));
+            Rule r = pair.getKey();
+            Pattern p = pair.getValue();
+            this.resetIds();
+            r.execute(this,p);
+        }
+
     }
 
     public void resetIds() {

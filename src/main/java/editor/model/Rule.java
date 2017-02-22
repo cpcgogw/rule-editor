@@ -319,4 +319,9 @@ public class Rule {
     private Pattern randomPossiblePattern() {
         return possibleTranslations.get(rand.nextInt(possibleTranslations.size()));
     }
+
+    public void execute(Pattern pattern, Pattern p) {
+        replace(p);
+        addAllNotIn(pattern, p);
+    }
 }

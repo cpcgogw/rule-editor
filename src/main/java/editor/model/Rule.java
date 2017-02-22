@@ -1,6 +1,7 @@
 package editor.model;
 
 
+import editor.Log;
 import javafx.util.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -90,11 +91,11 @@ public class Rule {
                 e.printStackTrace();
             }
         } catch (TransformerException ex) {
-            System.out.println("Error outputting document");
+            Log.print("Error outputting document", Log.LEVEL.ERROR);
         } catch (ParserConfigurationException ex) {
-            System.out.println("Error building document");
+            Log.print("Error building document", Log.LEVEL.ERROR);
         } catch (Exception e) {
-            System.out.println("Rule::save(String): There was an error saving the Rule: ");
+            Log.print("Rule::save(String): There was an error saving the Rule: ", Log.LEVEL.ERROR);
             e.printStackTrace();
         }
     }
@@ -171,7 +172,8 @@ public class Rule {
             Node n = findCorrespondingNode(node, tr);
             if(n != null){
                 if(Rule.DEBUG_MODE)
-                    System.out.println("replace: found corresponding node; " + "Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size());
+                    Log.print("replace: found corresponding node; "+ "Type: " + n.getType() + ", id: " + n.getNodeId() + ", #edges: " + n.getEdges().size(), Log.LEVEL.INFO);
+
                 n.addAllEdges(outsideEdges);
                 for (Edge e :
                         n.getEdges()) {
@@ -204,8 +206,8 @@ public class Rule {
                 }
             }
             if(!contains){
-                if(Rule.DEBUG_MODE)
-                    System.out.println("addAllNotIn: adding node; " + "Type: " + node.getType() + ", id:" + node.getNodeId() + ", #edges: " + node.getEdges().size());
+                Log.print("addAllNotIn: adding node; " + "Type: " + node.getType() + ", id:" + node.getNodeId()
+                        + ", #edges: " + node.getEdges().size(), Log.LEVEL.DEBUG);
                 p.nodes.add(node);
             }
         }
@@ -235,17 +237,14 @@ public class Rule {
             // find node in matching pattern with same type.
             if(node.getType() == n.getType()) {
                 checkedNodes.add(node);
-                if(DEBUG_MODE)
-                    System.out.println("nodeContainsSubPattern: found matching type");
-                returnBool = true;
+                Log.print("nodeContainsSubPattern: found matching type", Log.LEVEL.DEBUG);
                 /**
                  * all edges in node n must be in node "node"
                  * also traverses the nodes to check
                  */
                 returnBool = allEdgeAreContainedIn(n, node, checkedNodes, p);
                 if(returnBool){
-                    if(DEBUG_MODE)
-                        System.out.println("nodeContainsSubPattern: edges were correct, adding to pattern");
+                    Log.print("nodeContainsSubPattern: edges were correct, adding to pattern", Log.LEVEL.DEBUG);
                     p.nodes.add(node);
                 }
             }
@@ -261,8 +260,7 @@ public class Rule {
         boolean returnBool = true;
         boolean nooneChecked = true;
         if(n.getEdges().size() > node.getEdges().size()){
-            if(DEBUG_MODE)
-                System.out.println("allEdgeAreContainedIn: given node had less edges than other given node");
+            Log.print("allEdgeAreContainedIn: given node had less edges than other given node", Log.LEVEL.DEBUG);
             return false;
         }
         for (Edge e : n.getEdges()) { // for each edge in node from matching pattern
@@ -274,16 +272,14 @@ public class Rule {
                             /**
                              * if they are not the same we need to continue to look, but we set flag to false to keep track
                              */
-                            if(DEBUG_MODE)
-                                System.out.println("allEdgeAreContainedIn: found edge where end nodes were not the same");
+                            Log.print("allEdgeAreContainedIn: found edge where end nodes were not the same", Log.LEVEL.INFO);
                             returnBool = false;
                         }else{
                             /**
                              * if we find a matching node-edge pair we can set flag to true and check this subnode for subpattern.
                              * finally we break loop
                              */
-                            if(DEBUG_MODE)
-                                System.out.println("allEdgeAreContainedIn: found true case, checking subNode");
+                            Log.print("allEdgeAreContainedIn: found true case, checking subNode", Log.LEVEL.INFO);
                             returnBool = nodeContainsSubPattern(gE.getEndNode(), checkedNodes, p);
                             break;
                         }
@@ -292,12 +288,10 @@ public class Rule {
                     if(gE.getEndNode() == node){
                         nooneChecked = false;
                         if(gE.getStartNode().getType() != e.getStartNode().getType()){
-                            if(DEBUG_MODE)
-                                System.out.println("allEdgeAreContainedIn: found edge where start nodes were not the same");
+                            Log.print("allEdgeAreContainedIn: found edge where start nodes were not the same", Log.LEVEL.INFO);
                             returnBool = false;
                         }else{
-                            if(DEBUG_MODE)
-                                System.out.println("allEdgeAreContainedIn: found true case, checking subNode");
+                            Log.print("allEdgeAreContainedIn: found true case, checking subNode", Log.LEVEL.INFO);
                             returnBool = nodeContainsSubPattern(gE.getStartNode(), checkedNodes, p);
                             break;
                         }
@@ -308,8 +302,7 @@ public class Rule {
                 return false;
             }
         }
-        if(DEBUG_MODE)
-            System.out.println("returning: " + returnBool);
+        Log.print("returning: " + returnBool, Log.LEVEL.DEBUG);
         return returnBool;
     }
     public boolean matches(Pattern p){

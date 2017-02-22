@@ -1,6 +1,7 @@
 package editor.controller;
 
 import editor.FileHandler;
+import editor.Log;
 import editor.model.Edge;
 import editor.model.Pattern;
 import editor.model.Rule;
@@ -216,11 +217,9 @@ public class Controller {
         canvas.getChildren().clear();
         //match to current level
         Pattern newLevel = translateLevel(currentLevel, rules);
-        if(Rule.DEBUG_MODE){
-            System.out.println("Dumping generated level: \n Level: ");
-            for (Node n : newLevel.nodes) {
-                System.out.println("  node: Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size());
-            }
+        Log.print("Dumping generated level: ", Log.LEVEL.DEBUG);
+        for (Node n : newLevel.nodes) {
+            Log.print("  node: Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size(), Log.LEVEL.DEBUG);
         }
         //display
         currentLevel = newLevel;
@@ -251,15 +250,15 @@ public class Controller {
 
         activeCanvas = rule_canvas;
 
-        System.out.println("Dumping current rule: \n MatchingPattern: ");
+        Log.print("Dumping current rule: \n MatchingPattern: ", Log.LEVEL.INFO);
         for (Node n : activeRule.matchingPattern.nodes) {
-            System.out.println("  node: " + n.getType().toString());
+            Log.print("  node: " + n.getType().toString(), Log.LEVEL.INFO);
         }
-        System.out.println(" possibleOutcomes: ");
+        Log.print(" possibleOutcomes: ", Log.LEVEL.INFO);
         for (Pattern p : activeRule.possibleTranslations){
-            System.out.println("  outcome: ");
+            Log.print("  outcome: ", Log.LEVEL.INFO);
             for (Node n : p.nodes) {
-                System.out.println("   node: " + n.getType().toString());
+                Log.print("   node: " + n.getType().toString(), Log.LEVEL.INFO);
             }
         }
     }

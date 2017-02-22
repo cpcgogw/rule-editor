@@ -1,5 +1,6 @@
 package editor.model;
 
+import editor.Log;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -40,30 +41,29 @@ public class Pattern {
         ArrayList<Pair<Rule, Pattern>> rulePatternList = new ArrayList<>();
         for (Rule r : rules) {
             for (int i = 0; i < nodes.size(); i++) {
-                if(Rule.DEBUG_MODE) {
-                    System.out.println("checking subpattern:");
-                    System.out.println(" Type: " + nodes.get(i).getType() + ", id:" + nodes.get(i).getNodeId() + ", #edges: " + nodes.get(i).getEdges().size());
-                    System.out.println("vs");
-                    for (Node n :
-                            r.matchingPattern.nodes) {
-                        System.out.println(" Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size());
-                    }
+
+                Log.print("checking subpattern:", Log.LEVEL.DEBUG);
+                Log.print(" Type: " + nodes.get(i).getType() + ", id:" + nodes.get(i).getNodeId() + ", #edges: " + nodes.get(i).getEdges().size(), Log.LEVEL.DEBUG);
+                Log.print("vs", Log.LEVEL.DEBUG);
+                for (Node n : r.matchingPattern.nodes) {
+                    Log.print(" Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size(), Log.LEVEL.DEBUG);
                 }
+
                 Pattern p = new Pattern();
                 boolean result = r.nodeContainsSubPattern(nodes.get(i), new ArrayList<Node>(), p);
+
                 if(result){
                     rulePatternList.add(new Pair<>(r,p));
                 }
-                if(Rule.DEBUG_MODE) {
-                    System.out.println(result);
-                    System.out.println("found: ");
-                    for (Node n :
-                            p.nodes) {
-                        System.out.println(" Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size());
-                    }
+
+                Log.print(""+result, Log.LEVEL.DEBUG);
+                Log.print("found: ", Log.LEVEL.DEBUG);
+                for (Node n : p.nodes) {
+                    Log.print(" Type: " + n.getType() + ", id:" + n.getNodeId() + ", #edges: " + n.getEdges().size(), Log.LEVEL.DEBUG);
                 }
             }
         }
+
         Pair<Rule,Pattern> pair = rulePatternList.get(random.nextInt(rulePatternList.size()));
         Rule r = pair.getKey();
         Pattern p = pair.getValue();

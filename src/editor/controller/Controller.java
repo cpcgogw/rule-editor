@@ -317,6 +317,7 @@ public class Controller {
         for(Node node : pair.getKey()){
             nodes.add(node);
             canvas.getChildren().add(node);
+            nodeController.addNode(node);
         }
         for(Edge e : pair.getValue()){
             Edge c = nodeController.getEdgeController().addEdge(e);
